@@ -13,10 +13,17 @@ autoload -Uz compinit
 compinit -d $ZDOTDIR/.zcompdump
 # End of lines added by compinstall
 
+#variable definitions
 PROMPT='%B%F{green}%m%f:%F{blue}%~%f%b%(!.#.$) '
+eval $(dircolors -b)
+#end variable definitions
+
+#completion stuff
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+#end completion stuff
 
 #aliases from bash
-alias ls='ls --color=auto'
+alias ls='ls --color=always'
 alias ll='ls -Al'
 
 alias vim=nvim
@@ -33,6 +40,8 @@ alias internet="ping 8.8.8.8"
 alias cinstall="cargo install --path . --root ~/.local --force --locked"
 
 alias config="/usr/bin/git --git-dir=/home/sam-barr/dotfiles/ --work-tree=/home/sam-barr"
+
+alias rootshell="sudo -Es"
 #end aliases
 
 neofetch
