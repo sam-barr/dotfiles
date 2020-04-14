@@ -1,15 +1,15 @@
 #!/bin/bash
 
 cd ~/.aur || exit
-ignore=( "xmobar-lite" )
+ignore=( "xmobar-lite" "keynav-git")
 
 declare -A arr
 for dir in "${ignore[@]}"
 do
-    arr[$dir/]=1
+    arr[$dir]=1
 done
 
-for dir in */;
+for dir in *;
 do
     if [[ ${arr[$dir]} ]];
     then

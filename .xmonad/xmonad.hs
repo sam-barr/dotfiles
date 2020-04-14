@@ -16,11 +16,7 @@ import           Data.Monoid                  (All)
 import           Data.Word                    (Word32)
 
 main :: IO ()
-main = do
-    width <- (rect_width . screenRect . screenDetail . current) <$> (gets windowset)
-    bar <- statusBar myBar myPP myToggleStrutsKey myConfig
-    xmonad bar
-    --xmonad =<< statusBar myBar myPP myToggleStrutsKey myConfig
+main = xmonad =<< statusBar myBar myPP myToggleStrutsKey myConfig
 
 myBar :: String
 myBar = "xmobar ~/.xmonad/.xmobarrc"
@@ -40,29 +36,28 @@ myToggleStrutsKey XConfig { modMask = mask } = (mask, xK_t)
 myKeyBindings :: [(String, X ())]
 myKeyBindings =
     [ ("M-<Backspace>", spawn "pamixer -t")
-    , ("M-=", spawn "pamixer -i 2")
-    , ("M--", spawn "pamixer -d 2")
-    , ("M-S-=", spawn "light -A 5")
-    , ("M-S--", spawn "light -U 5")
-    , ("M-f", spawn "firefox")
-    , ("M-i", spawn "firefox --private-window")
-    , ("M-S-s", spawn "snake")
-    , ("M-S-l", spawn "physlock -d")
-    , ("M-S-f", spawn "scrot ~/Pictures/screenshots/%Y-%m-%d-%T.png")
-    , ("M-h", spawn "headphones")
-    , ("M-S-h", spawn "headset")
-    , ("M-z", spawn "zoom")
+    , ("M-=",           spawn "pamixer -i 2")
+    , ("M--",           spawn "pamixer -d 2")
+    , ("M-S-=",         spawn "light -A 5")
+    , ("M-S--",         spawn "light -U 5")
+    , ("M-f",           spawn "firefox")
+    , ("M-i",           spawn "firefox --private-window")
+    , ("M-S-l",         spawn "physlock -d")
+    , ("M-S-f",         spawn "scrot ~/Pictures/screenshots/%Y-%m-%d-%T.png")
+    , ("M-h",           spawn "headphones")
+    , ("M-S-h",         spawn "headset")
+    , ("M-z",           spawn "zoom")
     ]
 
 myConfig :: XConfig MyLayout
 myConfig = docks $ ewmh $
     def
-        { terminal = myTerminal
-        , borderWidth = myBorderWidth
-        , normalBorderColor = myNormalBorderColor
+        { terminal           = myTerminal
+        , borderWidth        = myBorderWidth
+        , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
-        , modMask = myModMask
-        , layoutHook = myLayoutHook
+        , modMask            = myModMask
+        , layoutHook         = myLayoutHook
         }
         `additionalKeysP` myKeyBindings `removeMouseBindings` map (myModMask, ) [button1, button2, button3]
 
