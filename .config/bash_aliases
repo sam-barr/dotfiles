@@ -1,0 +1,19 @@
+alias editbash="vim ~/.bashrc && source ~/.bashrc"
+alias editprofile="vim ~/.bash_profile && source ~/.bash_profile"
+alias vim=nvim
+alias svim="sudo -E nvim"
+alias vsplit="vim -O"
+alias :wq="echo You\'re not in vim dumbass"
+alias :q="echo You\'re not in vim dumbass"
+alias :w="echo You\'re not in vim dumbass"
+alias ..="cd .."
+alias ....="cd ../.."
+alias ......="cd ../../.."
+
+alias present="zathura --mode=presentation --page=0"
+alias clear='clear && neofetch'
+alias internet="ping 8.8.8.8"
+
+alias cinstall="cargo install --path . --root ~/.local --force --locked"
+
+alias config="/usr/bin/git --git-dir=/home/sam-barr/dotfiles/ --work-tree=/home/sam-barr"
