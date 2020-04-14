@@ -7,7 +7,7 @@ unsetopt extendedglob nomatch
 bindkey -v
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/sam-barr/.zshrc'
+zstyle :compinstall filename '$ZDOTDIR/.zshrc'
 
 autoload -Uz compinit
 compinit -d $ZDOTDIR/.zcompdump
