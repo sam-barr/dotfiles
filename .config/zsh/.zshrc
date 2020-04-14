@@ -13,7 +13,7 @@ autoload -Uz compinit
 compinit -d $ZDOTDIR/.zcompdump
 # End of lines added by compinstall
 
-PROMPT='%B%F{green}%m%f:%F{blue}%~%f%#%b '
+PROMPT='%B%F{green}%m%f:%F{blue}%~%f%b%(!.#.$) '
 
 #aliases from bash
 alias ls='ls --color=auto'
