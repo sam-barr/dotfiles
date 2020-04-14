@@ -1,0 +1,10 @@
+#!/bin/bash
+# This is used for the pacman hook that recompiles xmonad
+
+if [[ $UID = 0 ]]; then
+    runuser -l sam-barr -c "xmonad --recompile"
+else
+    xmonad --recompile
+fi
+
+xmonad --restart

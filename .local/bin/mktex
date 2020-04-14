@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ "$#" != 1 ]]; then
+    echo "Please provide 1 argument"
+    exit
+fi
+
+mkdir "$1"
+cd "$1" || exit
+cp ~/.local/template/template.tex template.tex
+cp ~/.local/template/x.tex x.tex
+ln -s x.pdf "$1".pdf
+latexmk -pdf x.tex &> /dev/null

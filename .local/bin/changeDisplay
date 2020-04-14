@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Script to switch displays
+
+DELL_DPI=336
+PRESENT_DPI=96
+ACER_DPI=96
+
+FIREFOX_RUNNING=$(pgrep -c firefox)
+
+if [ "$FIREFOX_RUNNING" != "0" ]; then
+    echo "Close firefox before switching displays"
+fi
+
+if [ "$1" = dell ]; then
+    DPI=$DELL_DPI
+    setxkbmap -option caps:swapescape
+    xrandr --dpi $DPI --output "eDP-1" --auto --output "DP-2" --off
+elif [ "$1" = acer ]; then
+    DPI=$ACER_DPI
+    setxkbmap -option 
+    xrandr --dpi $DPI --output "eDP-1" --off --output "DP-2" --auto
+elif [ "$1" = present ]; then
+    DPI=$PRESENT_DPI
+    setxkbmap -option caps:swapescape
+    xrandr --dpi $DPI --output "eDP-1" --off --output "DP-2" --auto
+    #pacmd set-card-profile 0 output:hdmi-stereo-extra1
+    pacmd set-card-profile 0 output:hdmi-surround
+    # that pacmd thing might not actually work
+else
+    echo "$1" is not a valid display
+    exit
+fi
+
+TERMINAL_CONFIG=$HOME/.config/alacritty.yml
+XMOBAR_CONFIG=$HOME/.xmonad/.xmobarrc
+FIREFOX_CONFIG=$HOME/.mozilla/firefox/f4jbau39.default-release/user.js
+DISPLAY_FOLDER=$HOME/.local/displays/"$1"
+
+cp "$DISPLAY_FOLDER"/alacritty.yml "$TERMINAL_CONFIG"
+cp "$DISPLAY_FOLDER"/xmobar "$XMOBAR_CONFIG"
+if [ "$FIREFOX_RUNNING" == "0" ]; then
+    cp "$DISPLAY_FOLDER"/firefox.js "$FIREFOX_CONFIG"
+else
+    echo "Firefox changes not being applied"
+fi
+
+xmonad --restart
+feh --no-fehbg --bg-fill '/home/sam-barr/Pictures/bliss.png' 

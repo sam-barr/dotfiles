@@ -1,0 +1,17 @@
+#!/bin/bash
+
+MAC_ADDRESS=00:1B:66:AC:77:78
+
+connected=$(bluetoothctl info "$MAC_ADDRESS" | sed -nE "s/\s*Connected: (\w)/\1/p")
+
+if [ "$connected" = "no" ]; then
+    exit
+fi
+
+headset=$(pactl info | grep headset_head_unit)
+
+if [ "$headset" ]; then
+    pacmd set-card-profile bluez_card.00_1B_66_AC_77_78 a2dp_sink
+else
+    pacmd set-card-profile bluez_card.00_1B_66_AC_77_78 headset_head_unit
+fi

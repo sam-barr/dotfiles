@@ -1,0 +1,12 @@
+#!/bin/bash
+
+MAC_ADDRESS=00:1B:66:AC:77:78
+
+connected=$(bluetoothctl info "$MAC_ADDRESS" | sed -nE "s/\s*Connected: (\w)/\1/p")
+
+if [ "$connected" = "yes" ]; then
+    bluetoothctl disconnect "$MAC_ADDRESS"
+    pamixer --mute
+elif [ "$connected" = "no" ]; then
+    bluetoothctl connect "$MAC_ADDRESS"
+fi

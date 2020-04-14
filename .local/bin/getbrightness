@@ -1,0 +1,3 @@
+#!/bin/bash
+
+printf "%0.f" "$(light -G)"

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+cd ~/.aur || exit
+ignore=( "xmobar-lite" )
+
+declare -A arr
+for dir in "${ignore[@]}"
+do
+    arr[$dir/]=1
+done
+
+for dir in */;
+do
+    if [[ ${arr[$dir]} ]];
+    then
+        continue
+    fi
+
+    cd ~/.aur/"$dir" || exit
+    if [[ "$(git pull)" == "Already up to date." ]];
+    then
+        echo "$dir" is up to date.
+    else
+        echo "$dir" has an update.
+        makepkg -sri
+        rm -rf ~/.aur/"$dir"/*
+        git reset --hard
+    fi
+done

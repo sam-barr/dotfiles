@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ "$#" != 1 ]]; then
+    echo "Please provide 1 argument"
+    exit
+fi
+
+echo \#\!/bin/bash > "$1"
+chmod +x "$1"

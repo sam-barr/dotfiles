@@ -1,0 +1,32 @@
+#!/bin/bash
+# the pipping through xargs gets rid of trailing whitespace I think
+
+idd=$(xinput --list | grep "Touchpad" | awk '{print $6}' | cut -d'=' -f2 | xargs)
+
+# set natural scrolling
+natscroll=$(xinput list-props "$idd" | sed -nE "s/libinput Natural Scrolling Enabled [(]([0-9]+)[)].*$/\1/p" | xargs)
+xinput set-prop "$idd" "$natscroll" 1
+
+# set good scrolling speed
+# xinput set-prop $idd 281 0.7
+
+# set tapping with touchpad
+tap=$(xinput list-props "$idd" | sed -nE "s/libinput Tapping Enabled [(]([0-9]+)[)].*$/\1/p" | xargs)
+xinput set-prop "$idd" "$tap" 1
+
+# disable touchscreen
+idd=$(xinput --list | grep ELAN | awk '{print $5}' | cut -d'=' -f2 | xargs)
+enabled=$(xinput list-props "$idd" | sed -nE "s/Device Enabled [(]([0-9]+)[)].*$/\1/p" | xargs)
+xinput set-prop "$idd" "$enabled" 0
+
+# mute sound
+pamixer -m
+
+# make so screen doesn't turn off from idle
+# tbh I don't know if I need to do this every time I startup,
+# but I can't be bothered to check
+xset s off -dpms
+
+# do redshift
+#oberlin:
+#redshift -l 41.17:-82.13

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ $UID != 0 ]]; then
+    echo "Please run with sudo"
+    exit 1
+fi
+
+mapfile -t packages < <(pacman -Q | grep haskell | awk '{print $1}')
+pacman -S "${packages[@]}" xmonad xmonad-contrib
