@@ -13,9 +13,10 @@ compinit -d $ZDOTDIR/.zcompdump
 # End of lines added by compinstall
 
 unalias run-help
-autoload run-help
+autoload -Uz run-help
 
 #variable definitions
+TIMEFMT=$'\nreal\t%*E\nuser\t%*U\nsys\t%*S\nmem\t%Mkb'
 PROMPT='%B%F{green}%m%f:%F{blue}%~%f%b%(!.#.$) '
 eval $(dircolors -b)
 #end variable definitions
