@@ -1,29 +1,27 @@
 #!/bin/bash
 
-cd ~/.aur || exit
+aur_dir=$HOME/.local/aur
+
 ignore=( "xmobar-lite" "keynav-git")
 
 declare -A arr
-for dir in "${ignore[@]}"
+for pkg in "${ignore[@]}"
 do
-    arr[$dir]=1
+    arr[$aur_dir/$pkg/]=1
 done
 
-for dir in *;
+for pkg in "$aur_dir"/*/;
 do
-    if [[ ${arr[$dir]} ]];
+    if [[ ${arr[$pkg]} ]];
     then
         continue
     fi
 
-    cd ~/.aur/"$dir" || exit
-    if [[ "$(git pull)" == "Already up to date." ]];
+    if [[ "$(git -C "$pkg" pull)" == "Already up to date." ]];
     then
-        echo "$dir" is up to date.
+        echo "$(basename "$pkg")" is up to date.
     else
-        echo "$dir" has an update.
-        makepkg -sri
-        rm -rf ~/.aur/"$dir"/*
-        git reset --hard
+        echo "$(basename "$pkg")" has an update.
+        (cd "$pkg" && makepkg -sricf)
     fi
 done
