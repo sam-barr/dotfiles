@@ -4,7 +4,6 @@ HISTSIZE=1000
 SAVEHIST=1000
 setopt autocd beep notify
 unsetopt extendedglob nomatch
-bindkey -v
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
 zstyle :compinstall filename '$ZDOTDIR/.zshrc'
@@ -12,6 +11,9 @@ zstyle :compinstall filename '$ZDOTDIR/.zshrc'
 autoload -Uz compinit
 compinit -d $ZDOTDIR/.zcompdump
 # End of lines added by compinstall
+
+unalias run-help
+autoload run-help
 
 #variable definitions
 PROMPT='%B%F{green}%m%f:%F{blue}%~%f%b%(!.#.$) '
@@ -43,5 +45,7 @@ alias config="/usr/bin/git --git-dir=/home/sam-barr/dotfiles/ --work-tree=/home/
 
 alias rootshell="sudo -Es"
 #end aliases
+
+source $ZDOTDIR/zsh-vim-mode/zsh-vim-mode.plugin.zsh
 
 neofetch
