@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [[ ! -d /mnt/drive/Backups ]]; then
+    echo "Please mount your usb drive"
+    exit
+fi
+
+ignore=( '.rustup' '.cache' '.mozilla' '.pki' '.zoom' '.cargo' )
+
+exclude_opts=()
+
+for dir in "${ignore[@]}"
+do
+    exclude_opts+=("--exclude=$dir")
+done
+
+cd "$HOME" || exit
+tar -zcf /mnt/drive/Backups/home_"$(date +"%m_%d_%Y")".tar.gz "${exclude_opts[@]}" .
