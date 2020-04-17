@@ -17,11 +17,15 @@ do
         continue
     fi
 
-    if [[ "$(git -C "$pkg" pull)" == "Already up to date." ]];
+    pushd "$pkg" > /dev/null || exit
+
+    if [[ "$(git pull)" == "Already up to date." ]];
     then
-        echo "$(basename "$pkg")" is up to date.
+        echo "$(basename "$(pwd)")" is up to date.
     else
-        echo "$(basename "$pkg")" has an update.
-        (cd "$pkg" && makepkg -sricf)
+        echo "$(basename "$(pwd)")" has an update.
+        makepkg -sricf
     fi
+
+    popd > /dev/null || exit
 done

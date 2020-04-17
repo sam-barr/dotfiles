@@ -2,6 +2,7 @@
 {-# LANGUAGE TupleSections #-}
 
 import           System.IO
+import           System.Environment -- idea: envirnoment variable for display
 import           XMonad
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks

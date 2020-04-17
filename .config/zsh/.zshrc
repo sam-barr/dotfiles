@@ -26,6 +26,9 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 #end completion stuff
 
 #aliases from bash
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 alias ls='ls --color=always'
 alias ll='ls -Alh'
 
