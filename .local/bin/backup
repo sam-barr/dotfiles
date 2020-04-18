@@ -5,14 +5,6 @@ if [[ ! -d /mnt/drive/Backups ]]; then
     exit
 fi
 
-ignore=( '.rustup' '.cache' '.mozilla' '.pki' '.zoom' '.cargo' )
+ignore=( '.rustup' '.cache' '.mozilla' '.pki' '.zoom' '.cargo' '.config/dotfiles' )
 
-exclude_opts=()
-
-for dir in "${ignore[@]}"
-do
-    exclude_opts+=("--exclude=$dir")
-done
-
-cd "$HOME" || exit
-tar -zcf /mnt/drive/Backups/home_"$(date +"%d_%m_%Y")".tar.gz "${exclude_opts[@]}" .
+cd "$HOME" && tar -zcvf /mnt/drive/Backups/home_"$(date +"%d_%m_%Y")".tar.gz --exclude-vcs "${ignore[@]/#/--exclude=}" .
