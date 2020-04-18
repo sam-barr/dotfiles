@@ -15,4 +15,4 @@ do
 done
 
 cd "$HOME" || exit
-tar -zcf /mnt/drive/Backups/home_"$(date +"%m_%d_%Y")".tar.gz "${exclude_opts[@]}" .
+tar -zcf /mnt/drive/Backups/home_"$(date +"%d_%m_%Y")".tar.gz "${exclude_opts[@]}" .
