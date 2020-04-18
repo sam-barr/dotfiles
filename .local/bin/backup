@@ -1,10 +1,18 @@
 #!/bin/bash
 
-if [[ ! -d /mnt/drive/Backups ]]; then
-    echo "Please mount your usb drive"
+if [[ "$#" = 1 ]] && [[ -d "$1" ]]; then
+    backup_dir="$1"
+elif [[ -d /mnt/drive/Backups ]]; then
+    backup_dir=/mnt/drive/Backups
+else
+    echo Please provide a valid directory or mount your usb drive
     exit
 fi
 
+echo Writing backup file to "$backup_dir"...
+
 ignore=( '.rustup' '.cache' '.mozilla' '.pki' '.zoom' '.cargo' '.config/dotfiles' )
 
-cd "$HOME" && tar -zcvf /mnt/drive/Backups/home_"$(date +"%d_%m_%Y")".tar.gz --exclude-vcs "${ignore[@]/#/--exclude=}" .
+cd "$HOME" && tar -zcf "$backup_dir"/home_"$(date +"%d_%m_%Y")".tar.gz --exclude-vcs "${ignore[@]/#/--exclude=}" .
+
+echo Done!
