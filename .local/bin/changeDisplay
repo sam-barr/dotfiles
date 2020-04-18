@@ -27,6 +27,7 @@ elif [ "$1" = present ]; then
     #pacmd set-card-profile 0 output:hdmi-stereo-extra1
     pacmd set-card-profile 0 output:hdmi-surround
     # that pacmd thing might not actually work
+    echo "If you're relying on audio, make sure it works"
 else
     echo "$1" is not a valid display
     exit
