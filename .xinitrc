@@ -50,6 +50,16 @@ fi
 
 # I'm going to keep these here instead of in .zprofile or something
 # because these depend on the X server already being started
-/home/sam-barr/.local/bin/startup
-/home/sam-barr/.local/bin/changeDisplay dell
+"$HOME"/.local/bin/startup
+
+# If DP-2 is connected, assume I'm plugged into my monitor
+if xrandr | grep -q "DP-2 connected"
+then
+    display=acer
+else
+    display=dell
+fi
+
+"$HOME"/.local/bin/changeDisplay "$display"
+
 exec xmonad

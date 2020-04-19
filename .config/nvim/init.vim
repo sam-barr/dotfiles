@@ -1,12 +1,9 @@
 call plug#begin()
-Plug 'dracula/vim'
 Plug 'cocopon/iceberg.vim'
-Plug 'fcpg/vim-orbital'
 Plug 'lervag/vimtex'
 Plug 'itchyny/lightline.vim'
 Plug 'neovimhaskell/haskell-vim'
 Plug 'rust-lang/rust.vim'
-Plug 'sbdchd/neoformat'
 call plug#end()
 
 colorscheme iceberg
@@ -24,13 +21,8 @@ set laststatus=2
 set spelllang=en
 set nohlsearch
 
+" haskell stuff
 let g:haskell_classic_highlighting = 1
-augroup fmt
-    autocmd!
-    autocmd BufWritePre *.rs undojoin | Neoformat
-    "autocmd BufWritePre *.hs undojoin | Neoformat stylishhaskell
-    "autocmd BufWritePre *.hs,*.rs | Neoformat
-augroup END
 
 "Latex stuff
 let g:tex_flavor='latex'
@@ -39,5 +31,7 @@ let g:vimtex_quickfix_mode=0
 let g:tex_conceal='abdmg'
 let g:vimtex_compiler_progname = 'nvr'
 set conceallevel=1
-
 autocmd FileType tex set spell
+
+" rust stuff
+let g:rustfmt_autosave = 1
