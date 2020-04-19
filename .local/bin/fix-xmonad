@@ -7,3 +7,5 @@ fi
 
 mapfile -t packages < <(pacman -Q | grep haskell | awk '{print $1}')
 pacman -S "${packages[@]}" xmonad xmonad-contrib
+
+ghc-pkg recache

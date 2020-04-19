@@ -1,5 +1,5 @@
 # Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
+HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt autocd beep notify
@@ -45,6 +45,7 @@ alias internet="ping 8.8.8.8"
 alias cinstall="cargo install --path . --root ~/.local --force --locked"
 
 alias config="/usr/bin/git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
+alias bash="HISTFILE=/dev/null bash" # don't create a history file when using bash
 #end aliases
 
 source $ZDOTDIR/zsh-vim-mode/zsh-vim-mode.plugin.zsh

@@ -2,6 +2,11 @@
 
 # Script to switch displays
 
+if [[ "$#" = 0 ]]; then
+    echo Please choose a display
+    exit
+fi
+
 DELL_DPI=336
 PRESENT_DPI=96
 ACER_DPI=96
