@@ -4,6 +4,7 @@ Plug 'lervag/vimtex'
 Plug 'itchyny/lightline.vim'
 Plug 'neovimhaskell/haskell-vim'
 Plug 'rust-lang/rust.vim'
+Plug 'vifm/vifm.vim'
 call plug#end()
 
 colorscheme iceberg
