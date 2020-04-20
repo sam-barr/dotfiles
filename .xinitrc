@@ -53,7 +53,7 @@ fi
 "$HOME"/.local/bin/startup
 
 # If DP-2 is connected, assume I'm plugged into my monitor
-if xrandr | grep -q "DP-2 connected"
+if xrandr | rg -q "DP-2 connected"
 then
     display=acer
 else

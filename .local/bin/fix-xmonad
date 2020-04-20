@@ -5,7 +5,7 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
-mapfile -t packages < <(pacman -Q | grep haskell | awk '{print $1}')
+mapfile -t packages < <(pacman -Q | rg haskell | awk '{print $1}')
 pacman -S "${packages[@]}" xmonad xmonad-contrib
 
 ghc-pkg recache

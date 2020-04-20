@@ -8,7 +8,7 @@ if [ "$connected" = "no" ]; then
     exit
 fi
 
-headset=$(pactl info | grep headset_head_unit)
+headset=$(pactl info | rg headset_head_unit)
 
 if [ "$headset" ]; then
     pacmd set-card-profile bluez_card.00_1B_66_AC_77_78 a2dp_sink

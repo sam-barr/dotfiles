@@ -1,16 +1,13 @@
-# Lines configured by zsh-newuser-install
 HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt autocd beep notify
 unsetopt extendedglob nomatch
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
+
 zstyle :compinstall filename '$ZDOTDIR/.zshrc'
 
 autoload -Uz compinit
 compinit -d $ZDOTDIR/.zcompdump
-# End of lines added by compinstall
 
 unalias run-help
 autoload -Uz run-help
@@ -25,10 +22,8 @@ eval $(dircolors -b)
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 #end completion stuff
 
-#aliases from bash
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+#aliases 
+alias grep="echo Use rg; :" # I want to force myself to use rg
 alias ls='ls --color=always'
 alias ll='ls -Alh'
 
@@ -44,7 +39,7 @@ alias internet="ping 8.8.8.8"
 
 alias cinstall="cargo install --path . --root ~/.local --force --locked"
 
-alias config="/usr/bin/git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
+alias config="git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
 alias bash="HISTFILE=/dev/null bash" # don't create a history file when using bash
 #end aliases
 
