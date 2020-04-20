@@ -45,4 +45,9 @@ alias bash="HISTFILE=/dev/null bash" # don't create a history file when using ba
 
 source $ZDOTDIR/zsh-vim-mode/zsh-vim-mode.plugin.zsh
 
+# fix systemctl completion?
+_systemctl_unit_state() {
+  typeset -gA _sys_unit_state
+  _sys_unit_state=( $(__systemctl list-unit-files "$PREFIX*" | awk '{print $1, $2}') ) }
+
 neofetch
