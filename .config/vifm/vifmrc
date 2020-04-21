@@ -7,6 +7,10 @@
 
 " ------------------------------------------------------------------------------
 
+" Don't confirm every time I use dd to delete a file
+" Because most of the time I kind of know what I'm doing
+set confirm=-=delete
+
 " Command used to edit files in various contexts.  The default is vim.
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.

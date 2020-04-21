@@ -67,14 +67,15 @@ myTerminal :: String
 myTerminal = "alacritty"
 
 myBorderWidth :: Word32
-myBorderWidth = 3
+myBorderWidth = 2
 --myBorderWidth = 6
 
 myNormalBorderColor :: String
 myNormalBorderColor = "#000000"
 
 myFocusedBorderColor :: String
-myFocusedBorderColor = "#4D4E4F"
+myFocusedBorderColor = "#3d3d5c"
+--myFocusedBorderColor = "#4D4E4F"
 
 myModMask :: KeyMask
 myModMask = mod4Mask

@@ -36,3 +36,9 @@ autocmd FileType tex set spell
 
 " rust stuff
 let g:rustfmt_autosave = 1
+
+" lightline stuff
+let g:lightline = { 'colorscheme': 'iceberg' }
+
+" clipboard
+set clipboard=unnamedplus
