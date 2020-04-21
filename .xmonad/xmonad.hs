@@ -48,7 +48,7 @@ myKeyBindings =
     , ("M-h",           spawn "headphones")
     , ("M-S-h",         spawn "headset")
     , ("M-z",           spawn "zoom")
-    , ("M-v",           spawn $ myTerminal ++ " --command vifm")
+    , ("M-v",           spawn $ myTerminal ++ " --command ~/.config/vifm/scripts/vifmrun ~ ~/Documents")
     ]
 
 myConfig :: XConfig MyLayout
