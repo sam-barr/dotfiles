@@ -57,9 +57,9 @@ Config {
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
         , Run Date "<fc=#ABABAB>%b %e (%a) %I:%M</fc>" "date" 10
 
-        , Run Com "getvolume" [] "volume" 1
+        , Run Com "getvolume" [] "volume" 3
 
-        , Run Com "getbrightness" [] "bright" 1
+        , Run Com "getbrightness" [] "bright" 3
 
         -- an article on the internet told me to include this
         , Run StdinReader

@@ -19,6 +19,14 @@ else
     exit
 fi
 
+if [[ -f "$backup_dir"/home_"$(date +%d_%m_%Y)".tar.gz ]]; then
+    read -p "You already made a backup today. Would you like to replace it? [yN] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit
+    fi
+fi
+
 echo Writing backup file to "$backup_dir"...
 
 ignore=( '.rustup' '.cache' '.mozilla' '.pki' '.zoom' '.cargo' '.config/dotfiles' )
