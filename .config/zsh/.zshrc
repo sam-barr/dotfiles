@@ -34,7 +34,7 @@ alias :q="echo You\'re not in vim dumbass"
 alias :w="echo You\'re not in vim dumbass"
 
 alias present="zathura --mode=presentation --page=0"
-alias clear='clear && neofetch'
+alias clear='clear && paleofetch'
 alias internet="ping 8.8.8.8"
 
 alias cinstall="cargo install --path . --root ~/.local --force --locked"
@@ -51,4 +51,4 @@ _systemctl_unit_state() {
   typeset -gA _sys_unit_state
   _sys_unit_state=( $(__systemctl list-unit-files "$PREFIX*" | awk '{print $1, $2}') ) }
 
-neofetch
+paleofetch
