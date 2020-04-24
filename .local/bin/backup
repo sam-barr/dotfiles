@@ -1,39 +1,22 @@
 #!/bin/bash
 
-if [[ "$#" = 1 ]] && [[ -d "$1" ]]; then
-    backup_dir="$1"
-elif [[ -d /mnt/drive/Backups ]]; then
-    backup_dir=/mnt/drive/Backups
+if [[ -d /mnt/drive/Backup ]]; then
+    :
 elif [[ -L /dev/disk/by-label/sam-barr-hdd ]]; then
     read -p "Your hard drive is plugged in but not mounted. Would you like to mount it? [yN] " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         mount -L sam-barr-hdd
-        backup_dir=/mnt/drive/Backups
         did_mount=true
     else
         exit
     fi
 else
-    echo Please provide a valid directory or plugin your hard drive
+    echo Please plugin your hard drive
     exit
 fi
 
-if [[ -f "$backup_dir"/home_"$(date +%d_%m_%Y)".tar.gz ]]; then
-    read -p "You already made a backup today. Would you like to replace it? [yN] " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit
-    fi
-fi
-
-echo Writing backup file to "$backup_dir"...
-
-ignore=( '.rustup' '.cache' '.mozilla' '.pki' '.zoom' '.cargo' '.config/dotfiles' )
-
-cd "$HOME" && tar -zcf "$backup_dir"/home_"$(date +"%d_%m_%Y")".tar.gz --exclude-vcs "${ignore[@]/#/--exclude=}" .
-
-echo Done!
+borg create /mnt/drive/Backup::"$(date +%d_%m_%Y)" "$HOME"
 
 if [[ "$did_mount" = true ]]; then
     read -p "Do you wish to unmount your hard drive? [yN] " -n 1 -r
