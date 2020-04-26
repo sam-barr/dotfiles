@@ -39,7 +39,7 @@ alias internet="ping 8.8.8.8"
 
 alias cinstall="cargo install --path . --root ~/.local --force --locked"
 
-alias config="git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
+alias config="/usr/bin/git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
 alias bash="HISTFILE=/dev/null bash" # don't create a history file when using bash
 alias mv="mv -i" # let's try this for a spin, but I'm also trying to use vifm more so w/e
 #end aliases

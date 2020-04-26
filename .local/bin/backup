@@ -16,7 +16,11 @@ else
     exit
 fi
 
-borg create /mnt/drive/Backup::"$(date +%d_%m_%Y)" "$HOME"
+if [[ "$1" = list ]]; then
+    borg list /mnt/drive/Backup
+else
+    borg create /mnt/drive/Backup::"$(date +%d_%m_%Y)" "$HOME"
+fi
 
 if [[ "$did_mount" = true ]]; then
     read -p "Do you wish to unmount your hard drive? [yN] " -n 1 -r
