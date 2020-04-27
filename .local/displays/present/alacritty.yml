@@ -8,6 +8,8 @@ env:
 font:
     size: 10
 
+background_opacity: 0.7
+
 colors:
   # Default colors
   primary:
