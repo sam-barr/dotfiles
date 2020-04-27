@@ -2,11 +2,11 @@ Config {
 
    -- appearance
      font =         "xft:Bitstream Vera Sans Mono:size=12:bold:antialias=true"
-   , bgColor =      "black"
-   , fgColor =      "#646464"
+   , bgColor =      "#161821"
+   , fgColor =      "#6b7089"
    , position =     Bottom
    , border =       TopB
-   , borderColor =  "#646464"
+   , borderColor =  "#6b7089"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
@@ -40,22 +40,22 @@ Config {
         Run Battery        [ "--template" , "Batt: <acstatus>"
                              , "--Low"      , "10"        -- units: %
                              , "--High"     , "80"        -- units: %
-                             , "--low"      , "darkred"
-                             , "--normal"   , "darkorange"
-                             , "--high"     , "darkgreen"
+                             , "--low"      , "#e27878"
+                             , "--normal"   , "#e2a478"
+                             , "--high"     , "#b4be82"
 
                              , "--" -- battery specific options
                                        -- discharging status
                                        , "-o"	, "<left>%"
                                        -- AC "on" status
-                                       , "-O"	, "<fc=#dAA520>Charging</fc>"
+                                       , "-O"	, "<fc=#e2a478>Charging</fc>"
                                        -- charged status
-                                       , "-i"	, "<fc=#006000>Charged</fc>"
+                                       , "-i"	, "<fc=#b4be82>Charged</fc>"
                              ] 50
 
         -- time and date indicator 
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-        , Run Date "<fc=#ABABAB>%b %e (%a) %I:%M</fc>" "date" 10
+        , Run Date "%b %e (%a) %I:%M" "date" 10
 
         , Run Com "getvolume" [] "volume" 3
 

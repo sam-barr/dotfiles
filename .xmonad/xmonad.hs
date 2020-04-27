@@ -30,7 +30,9 @@ myBar = "xmobar ~/.xmonad/.xmobarrc"
 
 myPP :: PP
 myPP = xmobarPP
-    { ppHiddenNoWindows = xmobarColor "grey" ""
+    { ppHiddenNoWindows = xmobarColor "#6b7089" ""
+    , ppCurrent = xmobarColor "#b4be82" "" . wrap "[" "]"
+    , ppHidden = xmobarColor "#d2d4de" ""
     , ppSep = " || "
     , ppLayout = \str ->
         if | "Spacing Dwindle R" `isPrefixOf` str -> "Dwindle"

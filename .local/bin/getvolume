@@ -6,7 +6,7 @@ vol=$(pamixer --get-volume-human)
 bt=$(bluetoothctl info "$MAC_ADDRESS" | sed -nE "s/\s*Connected: (\w)/\1/p")
 
 if [ "$bt" = "yes" ]; then
-    echo "<fc=#3182BD>$vol</fc>"
+    echo "<fc=#95c4ce>$vol</fc>"
 else
     echo "$vol"
 fi
