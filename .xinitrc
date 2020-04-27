@@ -61,5 +61,5 @@ else
 fi
 
 "$HOME"/.local/bin/changeDisplay "$display"
-
+export CURRENT_DISPLAY="$display"
 exec xmonad

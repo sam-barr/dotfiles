@@ -1,23 +1,29 @@
 {-# LANGUAGE LambdaCase    #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE MultiWayIf #-}
 
 import           System.IO
 import           System.Environment -- idea: envirnoment variable for display
 import           XMonad
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers
+import           XMonad.Hooks.ManageHelpers hiding (CW, CCW)
 import           XMonad.Hooks.EwmhDesktops -- steam
 import           XMonad.Layout.LayoutModifier (ModifiedLayout)
+import           XMonad.Layout.Dwindle
 import           XMonad.Layout.NoBorders
+import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.StackSet
 
 import           Data.Monoid                  (All)
 import           Data.Word                    (Word32)
+import           Data.List                    (isPrefixOf)
 
 main :: IO ()
-main = xmonad =<< statusBar myBar myPP myToggleStrutsKey myConfig
+main = do
+    display <- getEnv "CURRENT_DISPLAY"
+    xmonad =<< statusBar myBar myPP myToggleStrutsKey (myConfig display)
 
 myBar :: String
 myBar = "xmobar ~/.xmonad/.xmobarrc"
@@ -25,9 +31,14 @@ myBar = "xmobar ~/.xmonad/.xmobarrc"
 myPP :: PP
 myPP = xmobarPP
     { ppHiddenNoWindows = xmobarColor "grey" ""
+    , ppSep = " || "
+    , ppLayout = \str ->
+        if | "Spacing Dwindle R" `isPrefixOf` str -> "Dwindle"
+           | "Spacing Dwindle D" `isPrefixOf` str -> "Dwindle'"
+           | otherwise                    -> str
     , ppOrder =
         \case
-                x:y:_ -> [x, y]
+                x:y:_ -> [x,y]
                 _ -> []
     }
 
@@ -51,24 +62,22 @@ myKeyBindings =
     , ("M-v",           spawn $ myTerminal ++ " --command ~/.config/vifm/scripts/vifmrun ~ ~/Documents")
     ]
 
-myConfig :: XConfig MyLayout
-myConfig = docks $ ewmh $
+myConfig :: String -> XConfig MyLayout
+myConfig display = docks $ ewmh $
     def
         { terminal           = myTerminal
-        , borderWidth        = myBorderWidth
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , modMask            = myModMask
-        , layoutHook         = myLayoutHook
+        , layoutHook         = myLayoutHook display
+        , borderWidth        = case display of
+                                 "dell" -> 6
+                                 _ -> 2
         }
         `additionalKeysP` myKeyBindings `removeMouseBindings` map (myModMask, ) [button1, button2, button3]
 
 myTerminal :: String
 myTerminal = "alacritty"
-
-myBorderWidth :: Word32
-myBorderWidth = 2
---myBorderWidth = 6
 
 myNormalBorderColor :: String
 myNormalBorderColor = "#000000"
@@ -80,15 +89,19 @@ myFocusedBorderColor = "#3d3d5c"
 myModMask :: KeyMask
 myModMask = mod4Mask
 
-type MyLayout = Choose Tall (Choose (Mirror Tall) (ModifiedLayout WithBorder Full))
+type MyLayout = Choose (ModifiedLayout Spacing Dwindle) (Choose (ModifiedLayout Spacing Dwindle) (ModifiedLayout WithBorder Full))
 
-myLayoutHook :: MyLayout Window
-myLayoutHook = tiled ||| Mirror tiled ||| noBorders Full
-  where
-    tiled = Tall nmaster delta ratio
-    nmaster = 1
-    ratio = 1 / 2
-    delta = 3 / 100
+myLayoutHook :: String -> MyLayout Window
+myLayoutHook display = spaced dwindle1 ||| spaced dwindle2 ||| noBorders Full
+    where
+        b = case display of
+              "dell" -> 2
+              _      -> 1
+        spaced = spacingRaw True screenB True windowB True
+        screenB = Border b b b b
+        windowB = Border b b b b
+        dwindle1 = Dwindle R CW 1 1.1
+        dwindle2 = Dwindle D CCW 1 1.1
 
 myStartupHook :: X ()
 myStartupHook = do

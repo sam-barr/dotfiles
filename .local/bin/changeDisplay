@@ -51,5 +51,6 @@ else
     echo "Firefox changes not being applied"
 fi
 
-xmonad --restart
-feh --no-fehbg --bg-fill '/home/sam-barr/Pictures/bliss.png' 
+CURRENT_DISPLAY="$1" xmonad --restart
+feh --no-fehbg --bg-fill "$HOME/Pictures/bg.png"
+echo "$1" > "$HOME"/.cache/current_display
