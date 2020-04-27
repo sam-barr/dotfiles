@@ -36,8 +36,9 @@ myPP = xmobarPP
     , ppSep = " || "
     , ppLayout = \str ->
         if | "Spacing Dwindle R" `isPrefixOf` str -> "Dwindle"
-           | "Spacing Dwindle D" `isPrefixOf` str -> "Dwindle'"
-           | otherwise                    -> str
+           | "Spacing Dwindle D" `isPrefixOf` str -> "Dwundle"
+           | str == "Full"                        -> "  Full "
+           | otherwise                            -> str
     , ppOrder =
         \case
                 x:y:_ -> [x,y]
@@ -82,10 +83,10 @@ myTerminal :: String
 myTerminal = "alacritty"
 
 myNormalBorderColor :: String
-myNormalBorderColor = "#000000"
+myNormalBorderColor = "#161821"
 
 myFocusedBorderColor :: String
-myFocusedBorderColor = "#3d3d5c"
+myFocusedBorderColor = "#6b7089"
 --myFocusedBorderColor = "#4D4E4F"
 
 myModMask :: KeyMask
