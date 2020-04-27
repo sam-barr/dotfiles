@@ -8,6 +8,26 @@ Plug 'vifm/vifm.vim'
 call plug#end()
 
 colorscheme iceberg
+au ColorScheme * hi Normal ctermbg=None guibg=NONE
+au ColorScheme * hi NonText ctermbg=None guibg=NONE
+au ColorScheme * hi EndOfBuffer ctermbg=None guibg=NONE
+au ColorScheme * hi LineNr ctermbg=None guibg=NONE
+
+"function! s:transparent() abort
+"  highlight Normal ctermbg=NONE guibg=NONE
+"  highlight NonText ctermbg=NONE guibg=NONE
+"  highlight EndOfBuffer ctermbg=NONE guibg=NONE
+"  highlight Folded ctermbg=NONE guibg=NONE
+"  highlight LineNr ctermbg=NONE guibg=NONE
+"  highlight CursorLineNr ctermbg=NONE guibg=NONE
+"  highlight SpecialKey ctermbg=NONE guibg=NONE
+"  highlight ALEErrorSign ctermbg=NONE guibg=NONE
+"  highlight ALEWarningSign ctermbg=NONE guibg=NONE
+"  highlight GitGutterAdd ctermbg=NONE guibg=NONE
+"  highlight GitGutterChange ctermbg=NONE guibg=NONE
+"  highlight GitGutterChangeDelete ctermbg=NONE guibg=NONE
+"  highlight GitGutterDelete ctermbg=NONE guibg=NONE
+"endfunction
 
 set number relativenumber
 syntax on

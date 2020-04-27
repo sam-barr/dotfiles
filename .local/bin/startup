@@ -24,3 +24,5 @@ xset s off -dpms
 
 # Rebuild paleofetch's cache at startup
 paleofetch --recache > /dev/null
+
+picom -b 
