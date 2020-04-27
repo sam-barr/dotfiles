@@ -29,9 +29,9 @@ alias ll='ls -Alh'
 
 alias vim=nvim
 alias vsplit="vim -O"
-alias :wq="echo You\'re not in vim dumbass"
-alias :q="echo You\'re not in vim dumbass"
-alias :w="echo You\'re not in vim dumbass"
+alias :wq="echo You're not in vim dumbass"
+alias :q="echo You're not in vim dumbass"
+alias :w="echo You're not in vim dumbass"
 
 alias present="zathura --mode=presentation --page=0"
 alias clear='clear && paleofetch'
@@ -41,7 +41,8 @@ alias cinstall="cargo install --path . --root ~/.local --force --locked"
 
 alias config="/usr/bin/git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
 alias bash="HISTFILE=/dev/null bash" # don't create a history file when using bash
-alias mv="mv -i" # let's try this for a spin, but I'm also trying to use vifm more so w/e
+alias mv="mv -i"
+alias cp="cp -i"
 #end aliases
 
 source $ZDOTDIR/zsh-vim-mode/zsh-vim-mode.plugin.zsh

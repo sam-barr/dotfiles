@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ignore=( '.cache' '.cargo' '.mozilla' '.pki' '.rustup' '.Xauthority' '.zoom' 'Videos' )
+
 if [[ -d /mnt/drive/Backup ]]; then
     :
 elif [[ -L /dev/disk/by-label/sam-barr-hdd ]]; then
@@ -19,7 +21,10 @@ fi
 if [[ "$1" = list ]]; then
     borg list /mnt/drive/Backup
 else
-    borg create /mnt/drive/Backup::"$(date +%d_%m_%Y)" "$HOME"
+    borg create /mnt/drive/Backup::"$(date +%d_%m_%Y)" "$HOME" \
+        --progress --stats \
+        "${ignore[@]/#/--exclude=$HOME\/}" \
+        --compression lzma,6
 fi
 
 if [[ "$did_mount" = true ]]; then
