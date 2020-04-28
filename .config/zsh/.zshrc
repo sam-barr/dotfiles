@@ -33,7 +33,7 @@ alias :wq="echo You're not in vim dumbass"
 alias :q="echo You're not in vim dumbass"
 alias :w="echo You're not in vim dumbass"
 
-alias present="zathura --mode=presentation --page=0"
+alias present="zathura --mode=presentation --page=0 --config-dir=~"
 alias clear='clear && paleofetch'
 alias internet="ping 8.8.8.8"
 
