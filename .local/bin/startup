@@ -22,7 +22,4 @@ pamixer -m
 # make so screen doesn't turn off from idle
 xset s off -dpms
 
-# Rebuild paleofetch's cache at startup
-paleofetch --recache > /dev/null
-
 picom -b 
