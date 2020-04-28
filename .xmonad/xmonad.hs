@@ -98,21 +98,10 @@ myLayoutHook :: String -> MyLayout Window
 myLayoutHook display = spaced dwindle1 ||| spaced dwindle2 ||| noBorders Full
     where
         b = case display of
-              "dell" -> 2
+              "dell" -> 3
               _      -> 1
         spaced = spacingRaw True screenB True windowB True
         screenB = Border b b b b
         windowB = Border b b b b
         dwindle1 = Dwindle R CW 1 1.1
         dwindle2 = Dwindle D CCW 1 1.1
-
-myStartupHook :: X ()
-myStartupHook = do
-    width <- (rect_width . screenRect . screenDetail . current) <$> (gets windowset)
-    undefined
-
--- #define XF86XK_AudioLowerVolume	0x1008FF11   /* Volume control down        */
--- #define XF86XK_AudioMute	0x1008FF12   /* Mute sound from the system */
--- #define XF86XK_AudioRaiseVolume	0x1008FF13   /* Volume control up          */
--- #define XF86XK_MonBrightnessUp   0x1008FF02  /* Monitor/panel brightness */
--- #define XF86XK_MonBrightnessDown 0x1008FF03  /* Monitor/panel brightness */

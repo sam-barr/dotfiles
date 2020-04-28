@@ -7,9 +7,9 @@ if [[ "$#" = 0 ]]; then
     exit
 fi
 
-DELL_DPI=336
+HIGH_DPI=336
 PRESENT_DPI=96
-ACER_DPI=96
+LOW_DPI=96
 
 FIREFOX_RUNNING=$(pgrep -c firefox)
 
@@ -17,22 +17,14 @@ if [ "$FIREFOX_RUNNING" != "0" ]; then
     echo "Close firefox before switching displays"
 fi
 
-if [ "$1" = dell ]; then
-    DPI=$DELL_DPI
+if [ "$1" = high ]; then
+    DPI=$HIGH_DPI
     setxkbmap -option caps:swapescape
     xrandr --dpi $DPI --output "eDP-1" --auto --output "DP-2" --off
-elif [ "$1" = acer ]; then
-    DPI=$ACER_DPI
+elif [ "$1" = low ]; then
+    DPI=$LOW_DPI
     setxkbmap -option 
     xrandr --dpi $DPI --output "eDP-1" --off --output "DP-2" --auto
-elif [ "$1" = present ]; then
-    DPI=$PRESENT_DPI
-    setxkbmap -option caps:swapescape
-    xrandr --dpi $DPI --output "eDP-1" --off --output "DP-2" --auto
-    #pacmd set-card-profile 0 output:hdmi-stereo-extra1
-    pacmd set-card-profile 0 output:hdmi-surround
-    # that pacmd thing might not actually work
-    echo "If you're relying on audio, make sure it works"
 else
     echo "$1" is not a valid display
     exit
@@ -51,6 +43,8 @@ else
     echo "Firefox changes not being applied"
 fi
 
-CURRENT_DISPLAY="$1" xmonad --restart
+if [[ "$(pgrep xmonad)" ]]; then
+    CURRENT_DISPLAY="$1" xmonad --restart
+fi
+
 feh --no-fehbg --bg-fill "$HOME/Pictures/bg.png"
-echo "$1" > "$HOME"/.cache/current_display

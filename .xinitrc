@@ -55,9 +55,9 @@ fi
 # If DP-2 is connected, assume I'm plugged into my monitor
 if xrandr | rg -q "DP-2 connected"
 then
-    display=acer
+    display=low
 else
-    display=dell
+    display=high
 fi
 
 "$HOME"/.local/bin/changeDisplay "$display"
