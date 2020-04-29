@@ -8,7 +8,6 @@ if [[ "$#" = 0 ]]; then
 fi
 
 HIGH_DPI=336
-PRESENT_DPI=96
 LOW_DPI=96
 
 FIREFOX_RUNNING=$(pgrep -c firefox)
@@ -35,10 +34,10 @@ XMOBAR_CONFIG=$HOME/.xmonad/.xmobarrc
 FIREFOX_CONFIG=$HOME/.mozilla/firefox/f4jbau39.default-release/user.js
 DISPLAY_FOLDER=$HOME/.local/displays/"$1"
 
-cp "$DISPLAY_FOLDER"/alacritty.yml "$TERMINAL_CONFIG"
-cp "$DISPLAY_FOLDER"/xmobar "$XMOBAR_CONFIG"
+ln -sf "$DISPLAY_FOLDER"/alacritty.yml "$TERMINAL_CONFIG"
+ln -sf "$DISPLAY_FOLDER"/xmobar "$XMOBAR_CONFIG"
 if [ "$FIREFOX_RUNNING" == "0" ]; then
-    cp "$DISPLAY_FOLDER"/firefox.js "$FIREFOX_CONFIG"
+    ln -sf "$DISPLAY_FOLDER"/firefox.js "$FIREFOX_CONFIG"
 else
     echo "Firefox changes not being applied"
 fi
