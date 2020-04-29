@@ -1,12 +1,11 @@
 Config { 
 
    -- appearance
-     font =         "xft:Bitstream Vera Sans Mono:size=8:bold:antialias=true"
-   , bgColor =      "#161821"
+     font =         "xft:Hasklug Nerd Font:size=7.4:bold:antialias=true"
+   , bgColor =      "#0F1711"
    , fgColor =      "#6b7089"
-   , position =     Bottom
-   , border =       TopB
-   , borderColor =  "#6b7089"
+   , position =     Top
+   , alpha = 177
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text

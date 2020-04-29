@@ -33,7 +33,7 @@ alias :wq="echo You're not in vim dumbass"
 alias :q="echo You're not in vim dumbass"
 alias :w="echo You're not in vim dumbass"
 
-alias present="zathura --mode=presentation --page=0 --config-dir=~"
+alias present="zathura --mode=presentation --page=0 --config-dir=/"
 alias internet="ping 8.8.8.8"
 
 alias cinstall="cargo install --path . --root ~/.local --force --locked"

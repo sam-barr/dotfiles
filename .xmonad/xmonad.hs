@@ -75,7 +75,7 @@ myConfig display = docks $ ewmh $
         , modMask            = myModMask
         , layoutHook         = myLayoutHook display
         , borderWidth        = case display of
-                                 "dell" -> 6
+                                 "high" -> 6
                                  _ -> 2
         }
         `additionalKeysP` myKeyBindings `removeMouseBindings` map (myModMask, ) [button1, button2, button3]
@@ -93,16 +93,18 @@ myFocusedBorderColor = "#6b7089"
 myModMask :: KeyMask
 myModMask = mod4Mask
 
-type MyLayout = Choose (ModifiedLayout Spacing Dwindle) (Choose (ModifiedLayout Spacing Dwindle) (ModifiedLayout WithBorder Full))
+type MyModifier a = ModifiedLayout SmartBorder (ModifiedLayout Spacing a)
+type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (ModifiedLayout WithBorder Full))
 
 myLayoutHook :: String -> MyLayout Window
-myLayoutHook display = spaced dwindle1 ||| spaced dwindle2 ||| noBorders Full
+myLayoutHook display = modify dwindle1 ||| modify dwindle2 ||| noBorders Full
     where
         b = case display of
-              "dell" -> 3
+              "high" -> 3
               _      -> 1
-        spaced = spacingRaw True screenB True windowB True
-        screenB = Border b b b b
+        spaced = spacingRaw True screenB False windowB True
+        modify = smartBorders . spaced
+        screenB = Border 0 0 0 0
         windowB = Border b b b b
         dwindle1 = Dwindle R CW 1 1.1
         dwindle2 = Dwindle D CCW 1 1.1
