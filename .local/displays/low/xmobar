@@ -1,7 +1,7 @@
 Config { 
 
    -- appearance
-     font =         "xft:Hasklug Nerd Font:size=10:bold:antialias=true"
+     font =         "xft:Hasklug Nerd Font:size=11:bold:antialias=true"
    , bgColor =      "#0F1711"
    , fgColor =      "#6b7089"
    , position =     Top
@@ -13,7 +13,7 @@ Config {
    , template = "%battery% || Vol: %volume% || Light : %bright% }{ %StdinReader% || %date% "
 
    -- general behavior
-   , lowerOnStart =     False   -- send to top??? of window stack on start
+   , lowerOnStart =     False    -- send to top??? of window stack on start
    , hideOnStart =      False   -- start with window unmapped (hidden)
    , allDesktops =      True    -- show on all desktops
    , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
