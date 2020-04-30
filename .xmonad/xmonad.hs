@@ -26,7 +26,7 @@ main = do
     xmonad =<< statusBar myBar myPP myToggleStrutsKey (myConfig display)
 
 myBar :: String
-myBar = "xmobar ~/.xmonad/.xmobarrc"
+myBar = "xmobar --dock ~/.xmonad/.xmobarrc"
 
 myPP :: PP
 myPP = xmobarPP
@@ -66,6 +66,12 @@ myKeyBindings =
     , ("M-m",           spawn $ myTerminal ++ " --command mutt")
     ]
 
+myDocks :: XConfig a -> XConfig a
+myDocks c = c { startupHook = startupHook c <+> docksStartupHook
+              , handleEventHook = handleEventHook c <+> docksEventHook
+              , manageHook = manageHook c <+> manageDocks
+              }
+
 myConfig :: String -> XConfig MyLayout
 myConfig display = docks $ ewmh $
     def
@@ -77,6 +83,7 @@ myConfig display = docks $ ewmh $
         , borderWidth        = case display of
                                  "high" -> 6
                                  _ -> 2
+        , manageHook         = myManageHook
         }
         `additionalKeysP` myKeyBindings `removeMouseBindings` map (myModMask, ) [button1, button2, button3]
 
@@ -88,23 +95,30 @@ myNormalBorderColor = "#161821"
 
 myFocusedBorderColor :: String
 myFocusedBorderColor = "#6b7089"
---myFocusedBorderColor = "#4D4E4F"
 
 myModMask :: KeyMask
 myModMask = mod4Mask
 
-type MyModifier a = ModifiedLayout SmartBorder (ModifiedLayout Spacing a)
-type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (ModifiedLayout WithBorder Full))
+myManageHook :: ManageHook
+myManageHook = doSink
+
+type MyModifier a = ModifiedLayout AvoidStruts (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
+type MyModifier' a = ModifiedLayout WithBorder a
+type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full))
 
 myLayoutHook :: String -> MyLayout Window
-myLayoutHook display = modify dwindle1 ||| modify dwindle2 ||| noBorders Full
+myLayoutHook display = modify dwindle1 ||| modify dwindle2 ||| modify' Full
     where
         b = case display of
               "high" -> 3
               _      -> 1
         spaced = spacingRaw True screenB False windowB True
-        modify = smartBorders . spaced
+        modify = avoidStruts . smartBorders . spaced
         screenB = Border 0 0 0 0
         windowB = Border b b b b
         dwindle1 = Dwindle R CW 1 1.1
         dwindle2 = Dwindle D CCW 1 1.1
+        modify' = noBorders
+
+doSink :: ManageHook
+doSink = ask >>= doF . sink
