@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase    #-}
 {-# LANGUAGE TupleSections #-}
-{-# LANGUAGE MultiWayIf #-}
+{-# LANGUAGE MultiWayIf    #-}
 
 import           System.IO
 import           System.Environment -- idea: envirnoment variable for display
@@ -8,6 +8,7 @@ import           XMonad
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers hiding (CW, CCW)
+import           XMonad.Hooks.FadeWindows
 import           XMonad.Hooks.EwmhDesktops -- steam
 import           XMonad.Layout.LayoutModifier (ModifiedLayout)
 import           XMonad.Layout.Dwindle
@@ -16,14 +17,15 @@ import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.StackSet
 
-import           Data.Monoid                  (All)
+import           Data.Monoid
 import           Data.Word                    (Word32)
 import           Data.List                    (isPrefixOf)
 
 main :: IO ()
 main = do
     display <- getEnv "CURRENT_DISPLAY"
-    xmonad =<< statusBar myBar myPP myToggleStrutsKey (myConfig display)
+    bar <- statusBar myBar myPP myToggleStrutsKey (myConfig display)
+    xmonad bar
 
 myBar :: String
 myBar = "xmobar --dock ~/.xmonad/.xmobarrc"
@@ -66,12 +68,6 @@ myKeyBindings =
     , ("M-m",           spawn $ myTerminal ++ " --command mutt")
     ]
 
-myDocks :: XConfig a -> XConfig a
-myDocks c = c { startupHook = startupHook c <+> docksStartupHook
-              , handleEventHook = handleEventHook c <+> docksEventHook
-              , manageHook = manageHook c <+> manageDocks
-              }
-
 myConfig :: String -> XConfig MyLayout
 myConfig display = docks $ ewmh $
     def
@@ -100,7 +96,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 myManageHook :: ManageHook
-myManageHook = doSink
+myManageHook = isFloating --> doSink
 
 type MyModifier a = ModifiedLayout AvoidStruts (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
 type MyModifier' a = ModifiedLayout WithBorder a
@@ -112,13 +108,13 @@ myLayoutHook display = modify dwindle1 ||| modify dwindle2 ||| modify' Full
         b = case display of
               "high" -> 3
               _      -> 1
-        spaced = spacingRaw True screenB False windowB True
-        modify = avoidStruts . smartBorders . spaced
-        screenB = Border 0 0 0 0
-        windowB = Border b b b b
+        spaced   = spacingRaw True screenB False windowB True
+        modify   = avoidStruts . smartBorders . spaced
+        screenB  = Border 0 0 0 0
+        windowB  = Border b b b b
         dwindle1 = Dwindle R CW 1 1.1
         dwindle2 = Dwindle D CCW 1 1.1
-        modify' = noBorders
+        modify'  = noBorders
 
 doSink :: ManageHook
-doSink = ask >>= doF . sink
+doSink = reader (Endo . sink)
