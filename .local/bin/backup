@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ignore=( '.cache' '.cargo' '.mozilla' '.pki' '.rustup' '.Xauthority' '.zoom' 'Videos' '.local/aur' )
+ignore=( '.cache' '.cargo' '.mozilla' '.pki' '.rustup' '.Xauthority' '.zoom' 'Videos' '.local/aur' '.local/share/vifm/Trash' )
 
 if [[ -d /mnt/drive/Backup ]]; then
     :
@@ -20,6 +20,10 @@ fi
 
 if [[ "$1" = list ]]; then
     borg list /mnt/drive/Backup
+elif [[ "$1" == delete ]]; then
+    if [[ "$#" == 2 ]]; then
+        borg delete /mnt/drive/Backup::"$2"
+    fi
 else
     borg create /mnt/drive/Backup::"$(date +%d_%m_%Y)" "$HOME" \
         --progress --stats \

@@ -96,8 +96,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 myManageHook :: ManageHook
-myManageHook = doSink
---myManageHook = isFloating --> doSink
+myManageHook = className =? "firefox" --> doSink
 
 type MyModifier a = ModifiedLayout AvoidStruts (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
 type MyModifier' a = ModifiedLayout WithBorder a

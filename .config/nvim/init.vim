@@ -14,6 +14,7 @@ au ColorScheme * hi Normal ctermbg=None guibg=NONE
 au ColorScheme * hi NonText ctermbg=None guibg=NONE
 au ColorScheme * hi EndOfBuffer ctermbg=None guibg=NONE
 au ColorScheme * hi LineNr ctermbg=None guibg=NONE
+au ColorScheme * hi Conceal ctermbg=None guibg=NONE
 
 set number relativenumber
 syntax on
@@ -35,9 +36,9 @@ let g:haskell_classic_highlighting = 1
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
-let g:tex_conceal='abdmg'
+let g:tex_conceal='abdmgs'
 let g:vimtex_compiler_progname = 'nvr'
-set conceallevel=1
+set conceallevel=2
 autocmd FileType tex set spell
 
 " rust stuff
