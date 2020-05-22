@@ -36,7 +36,7 @@ let g:haskell_classic_highlighting = 1
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
-let g:tex_conceal='abdmgs'
+let g:tex_conceal='abdmg'
 let g:vimtex_compiler_progname = 'nvr'
 set conceallevel=2
 autocmd FileType tex set spell
@@ -49,3 +49,6 @@ let g:lightline = { 'colorscheme': 'iceberg' }
 
 " clipboard
 set clipboard=unnamedplus
+
+autocmd FileType gitcommit set spell
+autocmd FileType html set spell

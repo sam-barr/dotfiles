@@ -1,32 +1,46 @@
 # IMAP config
 source ~/.config/mutt/user
 
-set imap_user=$my_username@outlook.com
+set imap_user=$my_username@$my_domain
 set imap_pass=$my_password
+set timeout=15
+set mail_check=90
+set imap_keepalive=180
+set imap_idle
 
-set folder="imaps://imap-mail.outlook.com:993"
+#set folder="imaps://samf.bar:993"
+set folder="imaps://mail.privateemail.com:993"
 set spoolfile=+INBOX
 set ssl_force_tls=yes
 set ssl_starttls=yes
 
-set smtp_url="smtp://$my_username@smtp-mail.outlook.com:587"
+set from=$imap_user
+set smtp_url="smtp://$imap_user@mail.privateemail.com:587"
+set smtp_pass=$my_password
 
-set header_cache = ~/.cache/mutt
+set header_cache = ~/.cache/mutt/headers
+set record = ~/.cache/mutt/sent
+
+set mailcap_path = ~/.config/mutt/mailcap
+auto_view text/html
+
+set sort=threads
+set sort_aux=last-date-received
 
 # colors
-color hdrdefault blue black
-color quoted blue black
-color signature blue black
-color attachment red black
-color prompt brightmagenta black
-color message brightred black
-color error brightred black
+color hdrdefault blue default
+color quoted blue default
+color signature blue default
+color attachment red default
+color prompt brightmagenta default
+color message brightred default
+color error brightred default
 color indicator black cyan
 color status black blue
-color tree white black
-color markers red black
-color search white black
-color tilde brightmagenta black
+color tree white default
+color markers red default
+color search white default
+color tilde brightmagenta default
 color index white default ~F
 color index red default "~N|~O"
 color normal white default 

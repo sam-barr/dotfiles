@@ -42,6 +42,7 @@ alias config="/usr/bin/git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tre
 alias bash="HISTFILE=/dev/null bash" # don't create a history file when using bash
 alias mv="mv -i"
 alias cp="cp -i"
+alias ?='echo $?'
 #end aliases
 
 source $ZDOTDIR/zsh-vim-mode/zsh-vim-mode.plugin.zsh
