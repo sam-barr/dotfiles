@@ -1,0 +1,7 @@
+[user]
+	email = mail@samf.bar
+	name = sam-barr
+[core]
+	editor = nvim
+[pull]
+	ff = only
