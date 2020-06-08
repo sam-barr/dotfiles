@@ -28,10 +28,32 @@ main = do
     xmonad bar
 
 myBar :: String
-myBar = "xmobar --dock ~/.xmonad/.xmobarrc"
+myBar = sbBar
 
 myPP :: PP
-myPP = xmobarPP
+myPP = sbPP
+
+sbBar :: String
+sbBar = "sam-bar"
+
+xBar :: String
+xBar = "xmobar --dock ~/.xmonad/.xmobarrc"
+
+sbColor :: String -> String -> String
+sbColor = (++)
+
+sbPP :: PP
+sbPP = xmobarPP
+    { ppHiddenNoWindows = sbColor "#1" . wrap " " " "
+    , ppCurrent = sbColor "#2" . wrap "[" "]"
+    , ppHidden = sbColor "#0" . wrap " " " "
+    , ppWsSep = ""
+    , ppLayout = const ""
+    , ppOrder = (:[]) . head
+    }
+
+xPP :: PP
+xPP = xmobarPP
     { ppHiddenNoWindows = xmobarColor "#6b7089" ""
     , ppCurrent = xmobarColor "#b4be82" "" . wrap "[" "]"
     , ppHidden = xmobarColor "#d2d4de" ""
