@@ -21,10 +21,16 @@ import           Data.Monoid
 import           Data.Word                    (Word32)
 import           Data.List                    (isPrefixOf)
 
+data DPI = HIGH | LOW
+
 main :: IO ()
 main = do
     display <- getEnv "CURRENT_DISPLAY"
-    bar <- statusBar myBar myPP myToggleStrutsKey (myConfig display)
+    let dpi = case display of
+                "high" -> HIGH
+                "low"  -> LOW
+                _      -> LOW
+    bar <- statusBar myBar myPP myToggleStrutsKey (myConfig dpi)
     xmonad bar
 
 myBar :: String
@@ -64,17 +70,17 @@ myKeyBindings =
     , ("M-m",           spawn $ myTerminal ++ " --command mutt")
     ]
 
-myConfig :: String -> XConfig MyLayout
-myConfig display = docks $ ewmh $
+myConfig :: DPI -> XConfig MyLayout
+myConfig dpi = docks $ ewmh $
     def
         { terminal           = myTerminal
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , modMask            = myModMask
-        , layoutHook         = myLayoutHook display
-        , borderWidth        = case display of
-                                 "high" -> 6
-                                 _ -> 2
+        , layoutHook         = myLayoutHook dpi
+        , borderWidth        = case dpi of
+                                 HIGH -> 6
+                                 LOW  -> 2
         , manageHook         = myManageHook
         }
         `additionalKeysP` myKeyBindings `removeMouseBindings` map (myModMask, ) [button1, button2, button3]
@@ -98,12 +104,12 @@ type MyModifier a = ModifiedLayout AvoidStruts (ModifiedLayout SmartBorder (Modi
 type MyModifier' a = ModifiedLayout WithBorder a
 type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full))
 
-myLayoutHook :: String -> MyLayout Window
-myLayoutHook display = modify dwindle1 ||| modify dwindle2 ||| modify' Full
+myLayoutHook :: DPI -> MyLayout Window
+myLayoutHook dpi = modify dwindle1 ||| modify dwindle2 ||| modify' Full
     where
-        b = case display of
-              "high" -> 3
-              _      -> 1
+        b = case dpi of
+              HIGH -> 3
+              LOW  -> 1
         spaced   = spacingRaw True screenB False windowB True
         modify   = avoidStruts . smartBorders . spaced
         screenB  = Border 0 0 0 0
