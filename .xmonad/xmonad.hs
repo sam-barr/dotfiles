@@ -3,13 +3,13 @@
 {-# LANGUAGE MultiWayIf    #-}
 
 import           System.IO
-import           System.Environment -- idea: envirnoment variable for display
+import           System.Environment
 import           XMonad
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers hiding (CW, CCW)
 import           XMonad.Hooks.FadeWindows
-import           XMonad.Hooks.EwmhDesktops -- steam
+import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Layout.LayoutModifier (ModifiedLayout)
 import           XMonad.Layout.Dwindle
 import           XMonad.Layout.NoBorders
@@ -28,45 +28,20 @@ main = do
     xmonad bar
 
 myBar :: String
-myBar = sbBar
+myBar = "sam-bar"
 
 myPP :: PP
-myPP = sbPP
-
-sbBar :: String
-sbBar = "sam-bar"
-
-xBar :: String
-xBar = "xmobar --dock ~/.xmonad/.xmobarrc"
-
-sbColor :: String -> String -> String
-sbColor = (++)
-
-sbPP :: PP
-sbPP = xmobarPP
-    { ppHiddenNoWindows = sbColor "#1" . wrap " " " "
-    , ppCurrent = sbColor "#2" . wrap "[" "]"
-    , ppHidden = sbColor "#0" . wrap " " " "
+myPP = def
+    { ppHiddenNoWindows = ("#1" ++) . wrap " " " "
+    , ppCurrent = ("#2" ++) . wrap "[" "]"
+    , ppHidden = ("#0" ++) . wrap " " " "
     , ppWsSep = ""
-    , ppLayout = const ""
-    , ppOrder = (:[]) . head
-    }
-
-xPP :: PP
-xPP = xmobarPP
-    { ppHiddenNoWindows = xmobarColor "#6b7089" ""
-    , ppCurrent = xmobarColor "#b4be82" "" . wrap "[" "]"
-    , ppHidden = xmobarColor "#d2d4de" ""
-    , ppSep = " || "
-    , ppLayout = \str ->
-        if | "Spacing Dwindle R" `isPrefixOf` str -> "Dwindle"
-           | "Spacing Dwindle D" `isPrefixOf` str -> "Dwundle"
-           | str == "Full"                        -> "  Full "
-           | otherwise                            -> str
-    , ppOrder =
-        \case
-                x:y:_ -> [x,y]
-                _ -> []
+    , ppSep = ""
+    , ppLayout = \str -> "#1" ++
+        if | "Spacing Dwindle R" `isPrefixOf` str -> "Dwi"
+           | "Spacing Dwindle D" `isPrefixOf` str -> "Dwu"
+           | otherwise                            -> take 3 str
+    , ppOrder = take 2
     }
 
 myToggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
