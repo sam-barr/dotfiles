@@ -1,4 +1,3 @@
-{-# LANGUAGE LambdaCase    #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE MultiWayIf    #-}
 
@@ -70,8 +69,14 @@ myKeyBindings =
     , ("M-m",           spawn $ myTerminal ++ " --command mutt")
     ]
 
+applyMyBindings :: XConfig MyLayout -> XConfig MyLayout
+applyMyBindings = appKeys . appMouse
+    where
+        appKeys = flip additionalKeysP myKeyBindings
+        appMouse = flip removeMouseBindings $ map (myModMask, ) [button1, button2, button3]
+
 myConfig :: DPI -> XConfig MyLayout
-myConfig dpi = docks $ ewmh $
+myConfig dpi = docks $ ewmh $ applyMyBindings
     def
         { terminal           = myTerminal
         , normalBorderColor  = myNormalBorderColor
@@ -83,7 +88,6 @@ myConfig dpi = docks $ ewmh $
                                  LOW  -> 2
         , manageHook         = myManageHook
         }
-        `additionalKeysP` myKeyBindings `removeMouseBindings` map (myModMask, ) [button1, button2, button3]
 
 myTerminal :: String
 myTerminal = "alacritty"
