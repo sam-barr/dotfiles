@@ -1,0 +1,22 @@
+#!/bin/python
+
+import sys
+import subprocess
+import os
+
+# this script chains together sub-cropper and stack-png
+
+num_subs = []
+for png in sys.argv[2:]:
+    num_subs.append(subprocess.call(['sub-cropper', png]))
+
+stack_call = ['stack-png', '--output=out.png', '--gap-width=20', sys.argv[1]]
+for i in range(len(num_subs)):
+    split = os.path.splitext(sys.argv[i+2])[0]
+    for j in range(num_subs[i]):
+        stack_call.append('{}.cropped.{}.png'.format(split, j))
+
+subprocess.call(stack_call)
+
+for f in stack_call[3:]:
+    os.remove(f)
