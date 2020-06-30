@@ -4,7 +4,7 @@ Plug 'lervag/vimtex'
 Plug 'itchyny/lightline.vim'
 Plug 'neovimhaskell/haskell-vim'
 Plug 'rust-lang/rust.vim'
-Plug 'vifm/vifm.vim'
+Plug 'jelera/vim-javascript-syntax'
 call plug#end()
 
 noremap <Tab> <C-W><C-W>
@@ -52,3 +52,4 @@ set clipboard=unnamedplus
 
 autocmd FileType gitcommit set spell
 autocmd FileType html set spell
+autocmd FileType markdown set spell
