@@ -43,8 +43,11 @@ alias bash="HISTFILE=/dev/null bash" # don't create a history file when using ba
 alias mv="mv -i"
 alias cp="cp -i"
 alias ?='echo $?'
+
+alias disasm='objdump -drRwC -Mintel --no-show-raw-insn'
 #end aliases
 
+export KEYTIMEOUT=5
 source $ZDOTDIR/zsh-vim-mode/zsh-vim-mode.plugin.zsh
 
 # fix systemctl completion?
