@@ -19,6 +19,7 @@ import           XMonad.StackSet
 import           Data.Monoid
 import           Data.Word                    (Word32)
 import           Data.List                    (isPrefixOf)
+import           Data.Bits                    ((.|.))
 
 data DPI = HIGH | LOW
 

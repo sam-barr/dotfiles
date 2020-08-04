@@ -55,3 +55,6 @@ autocmd FileType html set spell
 autocmd FileType markdown set spell
 
 autocmd FileType c set tabstop=8 shiftwidth=8
+autocmd FileType html set tabstop=2 shiftwidth=2
+autocmd FileType xhtml set tabstop=2 shiftwidth=2
+autocmd FileType xml set tabstop=2 shiftwidth=2

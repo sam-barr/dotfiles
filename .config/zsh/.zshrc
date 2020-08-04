@@ -29,9 +29,6 @@ alias ll='ls -Alh'
 
 alias vim=nvim
 alias vsplit="vim -O"
-alias :wq="echo You're not in vim dumbass"
-alias :q="echo You're not in vim dumbass"
-alias :w="echo You're not in vim dumbass"
 
 alias present="zathura --mode=presentation --page=0 --config-dir=/"
 alias internet="ping 8.8.8.8"
@@ -49,8 +46,3 @@ alias disasm='objdump -drRwC -Mintel --no-show-raw-insn'
 
 export KEYTIMEOUT=5
 source $ZDOTDIR/zsh-vim-mode/zsh-vim-mode.plugin.zsh
-
-# fix systemctl completion?
-_systemctl_unit_state() {
-  typeset -gA _sys_unit_state
-  _sys_unit_state=( $(__systemctl list-unit-files "$PREFIX*" | awk '{print $1, $2}') ) }
