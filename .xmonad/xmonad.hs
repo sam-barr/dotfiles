@@ -1,5 +1,9 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE MultiWayIf    #-}
+{-# LANGUAGE MultiParamTypeClasses    #-}
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE FlexibleContexts    #-}
+{-# LANGUAGE UndecidableInstances    #-}
 
 import           System.IO
 import           System.Environment
@@ -9,13 +13,14 @@ import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers hiding (CW, CCW)
 import           XMonad.Hooks.FadeWindows
 import           XMonad.Hooks.EwmhDesktops
-import           XMonad.Layout.LayoutModifier (ModifiedLayout)
+import           XMonad.Layout.LayoutModifier (ModifiedLayout(..), LayoutModifier(..))
 import           XMonad.Layout.Dwindle
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.StackSet
 
+import qualified Data.Set                     as S
 import           Data.Monoid
 import           Data.Word                    (Word32)
 import           Data.List                    (isPrefixOf)
@@ -44,7 +49,8 @@ myPP = def
     , ppWsSep = ""
     , ppSep = ""
     , ppLayout = \str -> "#1" ++
-        if | "Spacing Dwindle R" `isPrefixOf` str -> "Dwi"
+        if | "XXX"               `isPrefixOf` str -> "XXX"
+           | "Spacing Dwindle R" `isPrefixOf` str -> "Dwi"
            | "Spacing Dwindle D" `isPrefixOf` str -> "Dwu"
            | otherwise                            -> take 3 str
     , ppOrder = take 2
@@ -105,7 +111,7 @@ myModMask = mod4Mask
 myManageHook :: ManageHook
 myManageHook = className =? "firefox" --> doSink
 
-type MyModifier a = ModifiedLayout AvoidStruts (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
+type MyModifier a = ModifiedLayout AV (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
 type MyModifier' a = ModifiedLayout WithBorder a
 type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full))
 
@@ -116,7 +122,7 @@ myLayoutHook dpi = modify dwindle1 ||| modify dwindle2 ||| modify' Full
               HIGH -> 3
               LOW  -> 1
         spaced   = spacingRaw True screenB False windowB True
-        modify   = avoidStruts . smartBorders . spaced
+        modify   = avoid . smartBorders . spaced
         screenB  = Border 0 0 0 0
         windowB  = Border b b b b
         dwindle1 = Dwindle R CW 1 1.1
@@ -125,3 +131,30 @@ myLayoutHook dpi = modify dwindle1 ||| modify dwindle2 ||| modify' Full
 
 doSink :: ManageHook
 doSink = reader (Endo . sink)
+
+data AVState = Struts | NoStruts
+    deriving (Read, Show)
+
+toggleAV :: AVState -> AVState
+toggleAV Struts = NoStruts
+toggleAV NoStruts = Struts
+
+data AV a = AV (AvoidStruts a) AVState
+    deriving (Read, Show)
+
+avoid :: LayoutClass l a => l a -> ModifiedLayout AV l a
+avoid layout = let ModifiedLayout av l = avoidStruts layout in
+                   ModifiedLayout (AV av Struts) l
+
+instance LayoutModifier AV a where
+    modifyLayout (AV av _) = modifyLayout av
+    modifierDescription (AV _ st) = case st of
+                                      Struts -> ""
+                                      NoStruts -> "XXX"
+    pureMess (AV av st) m = AV <$> (pureMess av m) <*> (pure newState)
+        where
+            newState = case fromMessage m of
+                         Just ToggleStruts -> toggleAV st
+                         _ -> st
+
+    hook _ = asks config >>= logHook

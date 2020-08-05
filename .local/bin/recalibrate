@@ -7,10 +7,12 @@ else
     xmonad --recompile
 fi
 
-if [[ -f "$HOME"/.cache/current_display ]]; then
-    current_display=$(cat "$HOME"/.cache/current_display)
-else
-    current_display=''
+if xset q &> /dev/null; then
+    if [[ -f "$HOME"/.cache/current_display ]]; then
+        current_display=$(cat "$HOME"/.cache/current_display)
+    else
+        current_display=''
+    fi
 fi
 
 CURRENT_DISPLAY="$current_display" xmonad --restart
