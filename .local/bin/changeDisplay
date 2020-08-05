@@ -31,9 +31,11 @@ fi
 
 TERMINAL_CONFIG=$HOME/.config/alacritty.yml
 FIREFOX_CONFIG=$HOME/.mozilla/firefox/f4jbau39.default-release/user.js
+PICOM_CONFIG="$HOME"/.config/picom.conf
 DISPLAY_FOLDER=$HOME/.local/displays/"$1"
 
 ln -sf "$DISPLAY_FOLDER"/alacritty.yml "$TERMINAL_CONFIG"
+ln -sf "$DISPLAY_FOLDER"/picom.conf "$PICOM_CONFIG"
 if [ "$FIREFOX_RUNNING" == "0" ]; then
     ln -sf "$DISPLAY_FOLDER"/firefox.js "$FIREFOX_CONFIG"
 else
