@@ -10,7 +10,7 @@ import           System.Environment
 import           XMonad
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers hiding (CW, CCW)
+import           XMonad.Hooks.ManageHelpers  hiding (CW, CCW)
 import           XMonad.Hooks.FadeWindows
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Layout.LayoutModifier (ModifiedLayout(..), LayoutModifier(..))
