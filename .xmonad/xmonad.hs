@@ -1,9 +1,7 @@
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE MultiWayIf    #-}
-{-# LANGUAGE MultiParamTypeClasses    #-}
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE FlexibleContexts    #-}
-{-# LANGUAGE UndecidableInstances    #-}
+{-# LANGUAGE TupleSections         #-}
+{-# LANGUAGE MultiWayIf            #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances     #-}
 
 import           System.IO
 import           System.Environment
@@ -20,7 +18,6 @@ import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.StackSet
 
-import qualified Data.Set                     as S
 import           Data.Monoid
 import           Data.Word                    (Word32)
 import           Data.List                    (isPrefixOf)
@@ -112,7 +109,7 @@ myManageHook :: ManageHook
 myManageHook = className =? "firefox" --> doSink
 
 type MyModifier a = ModifiedLayout AV (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
-type MyModifier' a = ModifiedLayout WithBorder a
+type MyModifier' a = ModifiedLayout AV (ModifiedLayout WithBorder a)
 type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full))
 
 myLayoutHook :: DPI -> MyLayout Window
@@ -127,7 +124,7 @@ myLayoutHook dpi = modify dwindle1 ||| modify dwindle2 ||| modify' Full
         windowB  = Border b b b b
         dwindle1 = Dwindle R CW 1 1.1
         dwindle2 = Dwindle D CCW 1 1.1
-        modify'  = noBorders
+        modify'  = avoid . noBorders
 
 doSink :: ManageHook
 doSink = reader (Endo . sink)
@@ -138,6 +135,8 @@ data AVState = Struts | NoStruts
 toggleAV :: AVState -> AVState
 toggleAV Struts = NoStruts
 toggleAV NoStruts = Struts
+
+-- newtype AA a = AA { unAA :: AvoidStruts a }
 
 data AV a = AV (AvoidStruts a) AVState
     deriving (Read, Show)
@@ -151,7 +150,7 @@ instance LayoutModifier AV a where
     modifierDescription (AV _ st) = case st of
                                       Struts -> ""
                                       NoStruts -> "XXX"
-    pureMess (AV av st) m = AV <$> (pureMess av m) <*> (pure newState)
+    pureMess (AV av st) m = AV <$> pureMess av m <*> pure newState
         where
             newState = case fromMessage m of
                          Just ToggleStruts -> toggleAV st
