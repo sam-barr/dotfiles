@@ -8,7 +8,7 @@ import           System.Environment
 import           XMonad
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers  hiding (CW, CCW)
+import           XMonad.Hooks.ManageHelpers   hiding (CW, CCW)
 import           XMonad.Hooks.FadeWindows
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Layout.LayoutModifier (ModifiedLayout(..), LayoutModifier(..))
@@ -19,6 +19,7 @@ import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindi
 import           XMonad.StackSet
 
 import           Data.Monoid
+import qualified Data.Set                     as S
 import           Data.Word                    (Word32)
 import           Data.List                    (isPrefixOf)
 import           Data.Bits                    ((.|.))
@@ -108,8 +109,8 @@ myModMask = mod4Mask
 myManageHook :: ManageHook
 myManageHook = className =? "firefox" --> doSink
 
-type MyModifier a = ModifiedLayout AV (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
-type MyModifier' a = ModifiedLayout AV (ModifiedLayout WithBorder a)
+type MyModifier a = ModifiedLayout AA (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
+type MyModifier' a = ModifiedLayout AA (ModifiedLayout WithBorder a)
 type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full))
 
 myLayoutHook :: DPI -> MyLayout Window
@@ -126,34 +127,15 @@ myLayoutHook dpi = modify dwindle1 ||| modify dwindle2 ||| modify' Full
         dwindle2 = Dwindle D CCW 1 1.1
         modify'  = avoid . noBorders
 
-doSink :: ManageHook
-doSink = reader (Endo . sink)
-
-data AVState = Struts | NoStruts
+newtype AA a = AA { unAA :: AvoidStruts a }
     deriving (Read, Show)
 
-toggleAV :: AVState -> AVState
-toggleAV Struts = NoStruts
-toggleAV NoStruts = Struts
-
--- newtype AA a = AA { unAA :: AvoidStruts a }
-
-data AV a = AV (AvoidStruts a) AVState
-    deriving (Read, Show)
-
-avoid :: LayoutClass l a => l a -> ModifiedLayout AV l a
+avoid :: LayoutClass l a => l a -> ModifiedLayout AA l a
 avoid layout = let ModifiedLayout av l = avoidStruts layout in
-                   ModifiedLayout (AV av Struts) l
+                   ModifiedLayout (AA av) l
 
-instance LayoutModifier AV a where
-    modifyLayout (AV av _) = modifyLayout av
-    modifierDescription (AV _ st) = case st of
-                                      Struts -> ""
-                                      NoStruts -> "XXX"
-    pureMess (AV av st) m = AV <$> pureMess av m <*> pure newState
-        where
-            newState = case fromMessage m of
-                         Just ToggleStruts -> toggleAV st
-                         _ -> st
-
+instance LayoutModifier AA a where
+    modifyLayout (AA av) = modifyLayout av
+    modifierDescription (AA (AvoidStruts set)) = if S.null set then "XXX" else ""
+    pureMess (AA av) m = AA <$> pureMess av m
     hook _ = asks config >>= logHook
