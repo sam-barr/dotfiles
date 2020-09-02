@@ -52,6 +52,7 @@ set clipboard=unnamedplus
 
 autocmd FileType gitcommit set spell
 autocmd FileType html set spell
+autocmd FileType xhtml set spell
 autocmd FileType markdown set spell
 
 autocmd FileType c set tabstop=8 shiftwidth=8
