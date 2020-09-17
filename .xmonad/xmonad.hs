@@ -72,6 +72,8 @@ myKeyBindings =
     , ("M-S-h",         spawn "headset")
     , ("M-v",           spawn $ myTerminal ++ " --command ~/.config/vifm/scripts/vifmrun ~ ~/Documents")
     , ("M-m",           spawn $ myTerminal ++ " --command mutt")
+    , ("M-l",           sendMessage Shrink)
+    , ("M-;",           sendMessage Expand)
     ]
 
 applyMyBindings :: XConfig MyLayout -> XConfig MyLayout

@@ -123,6 +123,7 @@ set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
 mark h ~/
 mark a /mnt/drive/
 mark d ~/Documents
+mark w ~/Documents/Waterloo
 
 " ------------------------------------------------------------------------------
 
