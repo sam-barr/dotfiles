@@ -22,8 +22,13 @@
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
 \newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand\angles[1]{\left\langle #1 \right\rangle}
+\newcommand\E[1]{\mathbb E \left[ #1 \right]}
+\renewcommand\Pr[1]{\operatorname{Pr}\left[ #1 \right]}
+\newcommand\Var[1]{\operatorname{Var}\left[ #1 \right]}
 
 \newcommand{\bx}{\mathbf{x}}
+\newcommand{\br}{\mathbf{r}}
 \newcommand{\bv}{\mathbf{v}}
 \newcommand{\bw}{\mathbf{w}}
 \newcommand{\bu}{\mathbf{u}}
@@ -33,7 +38,7 @@
 \newcommand{\bd}{\mathbf{d}}
 
 \newcommand\makenote[1]{{\color{red} \textbf{#1}}}
-\newcommand\angles[1]{\left\langle #1 \right\rangle}
+\newcommand\makeresponse[1]{{\color{blue} \textbf{#1}}}
 
 % Theorem stuff I stole from Lola
 \newtheorem{thm}{Theorem}[section]
@@ -52,6 +57,7 @@
 \theoremstyle{remark}
 \newtheorem{remark}[thm]{Remark}
 \newtheorem{problem}[thm]{Problem}
+\newtheorem{fact}[thm]{Fact}
 % End theorem stuff
 
 \newcommand{\alphasections}{\renewcommand{\thesubsection}{\thesection.\alph{subsection}}}

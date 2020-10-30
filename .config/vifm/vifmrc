@@ -124,6 +124,7 @@ mark h ~/
 mark a /mnt/drive/
 mark d ~/Documents
 mark w ~/Documents/Waterloo
+mark p ~/Documents/Papers
 
 " ------------------------------------------------------------------------------
 
@@ -147,6 +148,7 @@ command! make !!make %a
 command! mkcd :mkdir %a | cd %a
 command! vgrep vim "+grep %a"
 command! reload :write | restart
+command! grade !!grade %f &
 
 " --------------------------------------------------------------------------------
 " classify commands or whatever
@@ -281,13 +283,15 @@ filetype *.torrent rtorrent %f
 fileviewer *.torrent dumptorrent -v %c
 
 " FuseZipMount
-filetype *.zip,*.jar,*.war,*.ear,*.oxt,*.apkg
-       \ {Mount with fuse-zip}
-       \ FUSE_MOUNT|fuse-zip %SOURCE_FILE %DESTINATION_DIR,
-       \ {View contents}
-       \ zip -sf %c | less,
-       \ {Extract here}
-       \ tar -xf %c,
+" filetype *.zip,*.jar,*.war,*.ear,*.oxt,*.apkg
+"        \ {Mount with fuse-zip}
+"        \ FUSE_MOUNT|fuse-zip %SOURCE_FILE %DESTINATION_DIR,
+"        \ {View contents}
+"        \ zip -sf %c | less,
+"        \ {Extract here}
+"        \ tar -xf %c,
+filetype *.zip
+        \ unzip %f
 fileviewer *.zip,*.jar,*.war,*.ear,*.oxt,*.cbz,*.cbr zip -sf %c
 
 " ArchiveMount

@@ -2,7 +2,7 @@
 
 aur_dir=$HOME/.local/aur
 
-ignore=( "epubcheck" "processing" )
+ignore=( "processing" )
 
 declare -A arr
 for pkg in "${ignore[@]}"
