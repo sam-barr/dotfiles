@@ -38,7 +38,7 @@ highlight {*.aac,*.anx,*.asf,*.au,*.avi,*.ts,*.axa,*.axv,*.divx,*.flac,*.m2a,
           \*.ac3}
         \ cterm=none ctermfg=49 ctermbg=default
 " images
-highlight {*.bmp,*.gif,*.jpeg,*.jpg,*.ico,*.png,*.ppm,*.svg,*.svgz,*.tga,*.tif,
+highlight {*.bmp,*.gif,*.jpeg,*.jpg,*.ico,*.pdf,*.png,*.ppm,*.svg,*.svgz,*.tga,*.tif,
           \*.tiff,*.xbm,*.xcf,*.xpm,*.xspf,*.xwd}
         \ cterm=none ctermfg=117 ctermbg=default
 
