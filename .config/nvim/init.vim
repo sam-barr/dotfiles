@@ -2,7 +2,6 @@ call plug#begin()
 Plug 'cocopon/iceberg.vim'
 Plug 'lervag/vimtex'
 Plug 'itchyny/lightline.vim'
-Plug 'neovimhaskell/haskell-vim'
 Plug 'rust-lang/rust.vim'
 call plug#end()
 
@@ -19,20 +18,13 @@ au ColorScheme * hi Conceal ctermbg=None guibg=NONE
 set number relativenumber
 syntax on
 filetype plugin indent on
-filetype on
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set autoindent
+set tabstop=4 shiftwidth=4 expandtab autoindent
 set backspace=indent,eol,start
 set laststatus=2
 set spelllang=en
 set nohlsearch
 set clipboard=unnamedplus
 set conceallevel=2
-
-" haskell stuff
-let g:haskell_classic_highlighting = 1
 
 " tex stuff
 let g:tex_flavor='latex'
