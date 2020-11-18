@@ -5,8 +5,12 @@ Plug 'itchyny/lightline.vim'
 Plug 'rust-lang/rust.vim'
 call plug#end()
 
+source ~/.config/nvim/abbreviations.vim
+
+"  My mappings
 noremap <Tab> <C-W><C-W>
-noremap Y y$
+nnoremap Y y$
+map <C-s> 1z=
 
 colorscheme iceberg
 au ColorScheme * hi Normal ctermbg=None guibg=NONE

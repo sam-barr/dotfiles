@@ -7,6 +7,13 @@ if [[ "$XDG_VTNR" == "1" ]]; then
         update-aur
     fi
 
+    echo -n "Recompile git packages? [yN] "
+    read REPLY
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        echo ""
+        recompile-aur-git
+    fi
+
     if [[ -L /dev/disk/by-label/sam-barr-hdd ]]; then
         echo -n "Do you want to mount your hard drive? [yN] "
         read REPLY

@@ -1,0 +1,12 @@
+iabbr neccessary necessary
+iabbr Neccessary Necessary
+iabbr neccesary necessary
+iabbr Neccesary Necessary
+iabbr neccessarily necessarily
+iabbr Neccessarily Necessarily
+iabbr neccesarily necessarily
+iabbr Neccesarily Necessarily
+iabbr necesary necessary
+iabbr Necesary Necessary
+iabbr necesary necessary
+iabbr Necesary Necessary
