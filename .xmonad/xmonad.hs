@@ -3,16 +3,12 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances     #-}
 
-import           System.IO
 import           System.Environment
-import           System.Process
-import           System.Exit
 import           XMonad
 import           XMonad.Actions.WindowGo
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers   hiding (CW, CCW)
-import           XMonad.Hooks.FadeWindows
+import           XMonad.Hooks.ManageHelpers   hiding (CW)
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Layout.LayoutModifier (ModifiedLayout(..), LayoutModifier(..))
 import           XMonad.Layout.Dwindle
@@ -21,18 +17,15 @@ import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import qualified XMonad.StackSet as Stack
 
-import           Data.Monoid
 import qualified Data.Set                     as S
-import           Data.Word                    (Word32)
 import           Data.List                    (isPrefixOf)
-import           Data.Bits                    ((.|.))
 
 data DPI = HIGH | LOW
 
 main :: IO ()
 main = do
-    display <- getEnv "CURRENT_DISPLAY"
-    let dpi = case display of
+    displayType <- getEnv "CURRENT_DISPLAY"
+    let dpi = case displayType of
                 "high" -> HIGH
                 "low"  -> LOW
                 _      -> LOW
@@ -132,18 +125,18 @@ type MyModifier' a = ModifiedLayout AA (ModifiedLayout WithBorder a)
 type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full))
 
 myLayoutHook :: DPI -> MyLayout Window
-myLayoutHook dpi = modify dwindle1 ||| modify dwindle2 ||| modify' Full
+myLayoutHook dpi = modifier dwindle1 ||| modifier dwindle2 ||| modifier' Full
     where
         b = case dpi of
               HIGH -> 3
               LOW  -> 1
-        spaced   = spacingRaw True screenB False windowB True
-        modify   = avoid . smartBorders . spaced
-        screenB  = Border 0 0 0 0
-        windowB  = Border b b b b
-        dwindle1 = Dwindle R CW 1 1.1
-        dwindle2 = Dwindle D CCW 1 1.1
-        modify'  = avoid . noBorders
+        spaced    = spacingRaw True screenB False windowB True
+        modifier  = avoid . smartBorders . spaced
+        screenB   = Border 0 0 0 0
+        windowB   = Border b b b b
+        dwindle1  = Dwindle R CW 1 1.1
+        dwindle2  = Dwindle D CCW 1 1.1
+        modifier' = avoid . noBorders
 
 newtype AA a = AA { unAA :: AvoidStruts a }
     deriving (Read, Show)
