@@ -14,6 +14,3 @@ latexmk -pdf x.tex &> /dev/null
 
 cp ~/.local/template/latex.gitignore .gitignore
 echo "$1".pdf >> .gitignore
-git init > /dev/null
-git add . > /dev/null
-git commit -m "Initial Commit" > /dev/null

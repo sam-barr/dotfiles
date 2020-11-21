@@ -5,7 +5,10 @@
 
 import           System.IO
 import           System.Environment
+import           System.Process
+import           System.Exit
 import           XMonad
+import           XMonad.Actions.WindowGo
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers   hiding (CW, CCW)
@@ -16,7 +19,7 @@ import           XMonad.Layout.Dwindle
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
-import           XMonad.StackSet
+import qualified XMonad.StackSet as Stack
 
 import           Data.Monoid
 import qualified Data.Set                     as S
@@ -71,10 +74,16 @@ myKeyBindings =
     , ("M-h",           spawn "headphones")
     , ("M-S-h",         spawn "headset")
     , ("M-v",           spawn $ myTerminal ++ " --command ~/.config/vifm/scripts/vifmrun ~ ~/Documents")
-    -- , ("M-m",           spawn $ myTerminal ++ " --command mutt")
     , ("M-l",           sendMessage Shrink)
     , ("M-;",           sendMessage Expand)
+    , ("M-d",           gotoDiscord)
     ]
+
+gotoDiscord :: X ()
+gotoDiscord = flip raiseMaybe (className =? "discord") $ do
+    windows $ Stack.greedyView "d"
+    spawn "discord"
+
 
 applyMyBindings :: XConfig MyLayout -> XConfig MyLayout
 applyMyBindings = appKeys . appMouse
@@ -94,7 +103,11 @@ myConfig dpi = docks $ ewmh $ applyMyBindings
                                  HIGH -> 6
                                  LOW  -> 2
         , manageHook         = myManageHook
+        , workspaces         = myWorkspaces
         }
+
+myWorkspaces :: [String]
+myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "d"]
 
 myTerminal :: String
 myTerminal = "alacritty"
@@ -109,7 +122,10 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 myManageHook :: ManageHook
-myManageHook = className =? "firefox" --> doSink
+myManageHook = composeAll [
+      className =? "firefox" --> doSink
+    , className =? "discord" --> doShift "d"
+    ]
 
 type MyModifier a = ModifiedLayout AA (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
 type MyModifier' a = ModifiedLayout AA (ModifiedLayout WithBorder a)

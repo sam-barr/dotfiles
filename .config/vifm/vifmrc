@@ -194,6 +194,9 @@ set classify+=' ::*.avi,,*.ts,,*.axv,,*.divx,,*.m2v,,*.m4p,,*.m4v,,*.mkv,,*.m
 " You can also add %CLEAR if you want to clear screen before running FUSE
 " program.
 
+" IPE
+filextype *.ipe ipe %c %i &
+
 " Pdf
 filextype *.pdf,*.cbz,*.cbr zathura %c %i &, apvlv %c, xpdf %c
 fileviewer *.pdf
