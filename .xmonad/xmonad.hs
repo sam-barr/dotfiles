@@ -120,23 +120,23 @@ myManageHook = composeAll [
     , className =? "discord" --> doShift "d"
     ]
 
-type MyModifier a = ModifiedLayout AA (ModifiedLayout SmartBorder (ModifiedLayout Spacing a))
-type MyModifier' a = ModifiedLayout AA (ModifiedLayout WithBorder a)
-type MyLayout = Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full))
+type MyModifier a = ModifiedLayout SmartBorder (ModifiedLayout Spacing a)
+type MyModifier' a = ModifiedLayout WithBorder a
+type MyLayout = ModifiedLayout AA (Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full)))
 
 myLayoutHook :: DPI -> MyLayout Window
-myLayoutHook dpi = modifier dwindle1 ||| modifier dwindle2 ||| modifier' Full
+myLayoutHook dpi = avoid (modifier dwindle1 ||| modifier dwindle2 ||| modifier' Full)
     where
         b = case dpi of
               HIGH -> 3
               LOW  -> 1
         spaced    = spacingRaw True screenB False windowB True
-        modifier  = avoid . smartBorders . spaced
+        modifier  = smartBorders . spaced
         screenB   = Border 0 0 0 0
         windowB   = Border b b b b
         dwindle1  = Dwindle R CW 1 1.1
         dwindle2  = Dwindle D CCW 1 1.1
-        modifier' = avoid . noBorders
+        modifier' = noBorders
 
 newtype AA a = AA { unAA :: AvoidStruts a }
     deriving (Read, Show)
