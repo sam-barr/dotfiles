@@ -15,6 +15,7 @@ import           XMonad.Layout.Dwindle
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
+import           XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as Stack
 import           XMonad.Prompt
 import           XMonad.Prompt.Shell
@@ -42,7 +43,7 @@ myBar :: String
 myBar = "sam-bar"
 
 myPP :: PP
-myPP = def
+myPP = namedScratchpadFilterOutWorkspacePP $ def
     { ppHiddenNoWindows = ("#1" ++) . wrap " " " "
     , ppCurrent = ("#2" ++) . wrap "[" "]"
     , ppHidden = ("#0" ++) . wrap " " " "
@@ -76,6 +77,8 @@ myKeyBindings =
     , ("M-l",           sendMessage Shrink)
     , ("M-;",           sendMessage Expand)
     , ("M-d",           gotoDiscord)
+    , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
+    , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
 
 gotoDiscord :: X ()
@@ -124,7 +127,7 @@ myManageHook :: ManageHook
 myManageHook = composeAll
     [ className =? "firefox" --> doSink
     , className =? "discord" --> doShift "D"
-    ]
+    ] <+> namedScratchpadManageHook scratchpads
 
 type MyModifier a = ModifiedLayout SmartBorder (ModifiedLayout Spacing a)
 type MyModifier' a = ModifiedLayout WithBorder a
@@ -166,7 +169,7 @@ promptList =
 
 myXPConfig :: XPConfig
 myXPConfig = def
-    { font = "xft:Hasklug Nerd Font:dpi=336:size=10:style=bold"
+    { font = "xft:Hasklug Nerd Font:dpi=336:size=8:style=bold"
     , bgColor = "#0F1117"
     , fgColor = "#D2D4DE"
     , bgHLight = "#6B7089"
@@ -180,11 +183,23 @@ myXPConfig = def
     }
 
 myUnicodePrompt :: XPConfig -> X ()
-myUnicodePrompt config = uPrompt $ config { searchPredicate = isInfixOf, sorter = lower }
+myUnicodePrompt config = typeUnicodePrompt unicodeData $ config
+    { searchPredicate = isInfixOf
+    , sorter = lower
+    , maxComplRows = Just 1
+    }
     where
-        uPrompt = mkUnicodePrompt "xclip" ["-in", "-selection", "clipboard"] unicodeData
         unicodeData = "/usr/share/unicode/UnicodeData.txt"
-        lower = const $ map (map toLower) 
+        lower = const $ map (map toLower)
 
---kalkPrompt :: XPConfig -> X ()
---kalkPrompt = fmap (const ()) . flip inputPrompt ""
+scratchpads :: NamedScratchpads
+scratchpads = map makeNS [ "kalk", "ghci" ]
+    where
+        makeNS p = NS p (makeCmd p) (title =? p) scratchpadHook
+        makeCmd p = unwords
+            [ myTerminal
+            , "--title", p
+            , "--config-file ~/.config/scratchpad.yml"
+            , "--command", p
+            ]
+        scratchpadHook = customFloating $ Stack.RationalRect 0 0 1 (1/15)
