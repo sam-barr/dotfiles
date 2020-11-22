@@ -1,7 +1,21 @@
 set selection-clipboard clipboard
 
+set font "Hasklug Nerd Font 25"
+
+set statusbar-fg "#C6C8D1"
+set statusbar-bg "#161821"
+set inputbar-fg "#B4BE82"
+set inputbar-bg "#161821"
 set recolor-lightcolor "#0F1117"
-set recolor-darkcolor "#d2d4de"
+set recolor-darkcolor "#6B7089"
+set highlight-color "#B4BE82"
+set highlight-active-color "#E2A478"
+set notification-fg "#E27878"
+set notification-error-fg "#E27878"
+set notification-warning-fg "#E27878"
+set notification-bg "#161821"
+set notification-error-bg "#161821"
+set notification-warning-bg "#161821"
 set recolor true
 map i recolor
 
