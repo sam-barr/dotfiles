@@ -171,10 +171,11 @@ myXPConfig :: XPConfig
 myXPConfig = def
     { font = "xft:Hasklug Nerd Font:dpi=336:size=8:style=bold"
     , bgColor = "#0F1117"
-    , fgColor = "#D2D4DE"
+    , fgColor = "#6B7089"
     , bgHLight = "#6B7089"
     , fgHLight = "#0F1117"
-    , borderColor = "#D4D2DE"
+    , borderColor = "#6B7089"
+    , promptBorderWidth = 6
     , height = 100
     , position = Top
     , alwaysHighlight = True
