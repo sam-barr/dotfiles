@@ -2,7 +2,7 @@
 
 aur_dir=$HOME/.local/aur
 
-ignore=( "processing" )
+ignore=( "processing" "kalk-git" )
 
 declare -A arr
 for pkg in "${ignore[@]}"

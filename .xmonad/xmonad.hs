@@ -16,9 +16,15 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import qualified XMonad.StackSet as Stack
+import           XMonad.Prompt
+import           XMonad.Prompt.Shell
+import           XMonad.Prompt.Man
+import           XMonad.Prompt.Unicode
+
 
 import qualified Data.Set                     as S
-import           Data.List                    (isPrefixOf)
+import           Data.List                    (isPrefixOf, isInfixOf)
+import           Data.Char
 
 data DPI = HIGH | LOW
 
@@ -70,11 +76,11 @@ myKeyBindings =
     , ("M-l",           sendMessage Shrink)
     , ("M-;",           sendMessage Expand)
     , ("M-d",           gotoDiscord)
-    ]
+    ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
 
 gotoDiscord :: X ()
 gotoDiscord = flip raiseMaybe (className =? "discord") $ do
-    windows $ Stack.greedyView "d"
+    windows $ Stack.greedyView "D"
     spawn "discord"
 
 
@@ -100,7 +106,7 @@ myConfig dpi = docks $ ewmh $ applyMyBindings
         }
 
 myWorkspaces :: [String]
-myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "d"]
+myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "D"]
 
 myTerminal :: String
 myTerminal = "alacritty"
@@ -115,9 +121,9 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 myManageHook :: ManageHook
-myManageHook = composeAll [
-      className =? "firefox" --> doSink
-    , className =? "discord" --> doShift "d"
+myManageHook = composeAll
+    [ className =? "firefox" --> doSink
+    , className =? "discord" --> doShift "D"
     ]
 
 type MyModifier a = ModifiedLayout SmartBorder (ModifiedLayout Spacing a)
@@ -150,3 +156,35 @@ instance LayoutModifier AA a where
     modifierDescription (AA (AvoidStruts set)) = if S.null set then "XXX" else ""
     pureMess (AA av) m = AA <$> pureMess av m
     hook _ = asks config >>= logHook
+
+promptList :: [(String, XPConfig -> X ())]
+promptList =
+    [ ("p", shellPrompt)
+    , ("m", manPrompt)
+    , ("u", myUnicodePrompt)
+    ]
+
+myXPConfig :: XPConfig
+myXPConfig = def
+    { font = "xft:Hasklug Nerd Font:dpi=336:size=10:style=bold"
+    , bgColor = "#0F1117"
+    , fgColor = "#D2D4DE"
+    , bgHLight = "#6B7089"
+    , fgHLight = "#0F1117"
+    , borderColor = "#D4D2DE"
+    , height = 100
+    , position = Top
+    , alwaysHighlight = True
+    , maxComplRows = Just 1
+    , historySize = 0
+    }
+
+myUnicodePrompt :: XPConfig -> X ()
+myUnicodePrompt config = uPrompt $ config { searchPredicate = isInfixOf, sorter = lower }
+    where
+        uPrompt = mkUnicodePrompt "xclip" ["-in", "-selection", "clipboard"] unicodeData
+        unicodeData = "/usr/share/unicode/UnicodeData.txt"
+        lower = const $ map (map toLower) 
+
+--kalkPrompt :: XPConfig -> X ()
+--kalkPrompt = fmap (const ()) . flip inputPrompt ""
