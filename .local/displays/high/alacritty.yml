@@ -17,7 +17,7 @@ font:
         family: Hasklug Nerd Font
         style: Italic
 
-background_opacity: 0.0
+background_opacity: 1.0
 
 # Colors (Iceberg)
 colors:

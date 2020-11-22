@@ -2,6 +2,7 @@ set selection-clipboard clipboard
 
 set recolor-lightcolor "#0F1117"
 set recolor-darkcolor "#d2d4de"
+set recolor true
 map i recolor
 
 set page-padding 200

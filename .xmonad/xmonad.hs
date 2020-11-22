@@ -115,10 +115,10 @@ myTerminal :: String
 myTerminal = "alacritty"
 
 myNormalBorderColor :: String
-myNormalBorderColor = "#161821"
+myNormalBorderColor = "#0F1117"
 
 myFocusedBorderColor :: String
-myFocusedBorderColor = "#6b7089"
+myFocusedBorderColor = "#6B7089"
 
 myModMask :: KeyMask
 myModMask = mod4Mask
@@ -129,20 +129,14 @@ myManageHook = composeAll
     , className =? "discord" --> doShift "D"
     ] <+> namedScratchpadManageHook scratchpads
 
-type MyModifier a = ModifiedLayout SmartBorder (ModifiedLayout Spacing a)
+type MyModifier a = ModifiedLayout SmartBorder a
 type MyModifier' a = ModifiedLayout WithBorder a
 type MyLayout = ModifiedLayout AA (Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full)))
 
 myLayoutHook :: DPI -> MyLayout Window
 myLayoutHook dpi = avoid (modifier dwindle1 ||| modifier dwindle2 ||| modifier' Full)
     where
-        b = case dpi of
-              HIGH -> 3
-              LOW  -> 1
-        spaced    = spacingRaw True screenB False windowB True
-        modifier  = smartBorders . spaced
-        screenB   = Border 0 0 0 0
-        windowB   = Border b b b b
+        modifier  = smartBorders
         dwindle1  = Dwindle R CW 1 1.1
         dwindle2  = Dwindle D CCW 1 1.1
         modifier' = noBorders
@@ -186,21 +180,14 @@ myXPConfig = def
 myUnicodePrompt :: XPConfig -> X ()
 myUnicodePrompt config = typeUnicodePrompt unicodeData $ config
     { searchPredicate = isInfixOf
-    , sorter = lower
     , maxComplRows = Just 1
     }
     where
         unicodeData = "/usr/share/unicode/UnicodeData.txt"
-        lower = const $ map (map toLower)
 
 scratchpads :: NamedScratchpads
 scratchpads = map makeNS [ "kalk", "ghci" ]
     where
         makeNS p = NS p (makeCmd p) (title =? p) scratchpadHook
-        makeCmd p = unwords
-            [ myTerminal
-            , "--title", p
-            , "--config-file ~/.config/scratchpad.yml"
-            , "--command", p
-            ]
+        makeCmd p = unwords [ myTerminal , "--title", p , "--command", p ]
         scratchpadHook = customFloating $ Stack.RationalRect 0 0 1 (1/15)

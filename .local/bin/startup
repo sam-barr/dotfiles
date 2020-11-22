@@ -21,5 +21,3 @@ pamixer -m
 
 # make so screen doesn't turn off from idle
 xset s off -dpms
-
-picom -b
