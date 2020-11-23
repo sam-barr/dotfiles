@@ -24,8 +24,8 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 #aliases 
 alias grep="echo Use rg; :" # I want to force myself to use rg
-alias ls='ls --color=always'
-alias ll='ls -Alh'
+alias ls='exa --color=always --group-directories-first'
+alias ll='exa --color=always --group-directories-first -al'
 
 alias vim=nvim
 alias vsplit="vim -O"

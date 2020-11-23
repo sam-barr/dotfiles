@@ -100,7 +100,7 @@ myConfig dpi = docks $ ewmh $ applyMyBindings
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , modMask            = myModMask
-        , layoutHook         = myLayoutHook dpi
+        , layoutHook         = myLayoutHook
         , borderWidth        = case dpi of
                                  HIGH -> 6
                                  LOW  -> 2
@@ -133,8 +133,8 @@ type MyModifier a = ModifiedLayout SmartBorder a
 type MyModifier' a = ModifiedLayout WithBorder a
 type MyLayout = ModifiedLayout AA (Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full)))
 
-myLayoutHook :: DPI -> MyLayout Window
-myLayoutHook dpi = avoid (modifier dwindle1 ||| modifier dwindle2 ||| modifier' Full)
+myLayoutHook :: MyLayout Window
+myLayoutHook = avoid (modifier dwindle1 ||| modifier dwindle2 ||| modifier' Full)
     where
         modifier  = smartBorders
         dwindle1  = Dwindle R CW 1 1.1
