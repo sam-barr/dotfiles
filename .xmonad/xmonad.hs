@@ -25,7 +25,7 @@ import           XMonad.Prompt.FuzzyMatch
 
 import qualified Data.Set                     as S
 import qualified Data.Map.Strict              as M
-import           Data.List                    (isPrefixOf, sortOn)
+import           Data.List                    (isPrefixOf, sortOn, isInfixOf)
 import           Data.Char
 import qualified Data.ByteString.Char8        as BS
 import           Data.FileEmbed
@@ -165,7 +165,8 @@ promptList :: [(String, XPConfig -> X ())]
 promptList =
     [ ("p", shellPrompt)
     , ("m", manPrompt)
-    , ("u", myUnicodePrompt)
+    , ("u", unicodePrompt)
+    , ("o", paperPrompt)
     ]
 
 myXPConfig :: XPConfig
@@ -184,6 +185,48 @@ myXPConfig = def
     , historySize = 0
     }
 
+-- Paper Prompt --
+
+data Paper = Paper
+
+instance XPrompt Paper where
+    showXPrompt Paper = "Paper: "
+    commandToComplete Paper s = s
+    nextCompletion Paper = getNextCompletion
+
+paperPath :: FilePath
+paperPath = "/home/sam-barr/Documents/Papers"
+
+findPapers :: String -> String -> X String
+findPapers name format = runProcessWithInput "find"
+    [ paperPath
+    , "-name", name
+    , "-printf", format
+    ] ""
+
+paperPrompt :: XPConfig -> X ()
+paperPrompt conf = do
+        papers <- myPapers
+        mkXPrompt Paper conf' (paperCompl papers) openPaper
+    where
+        conf' = conf {maxComplRows=Nothing}
+        paperCompl _ "" = return []
+        paperCompl papers search = return $ searchPapers papers search 
+        openPaper paper = do
+            filePath <- findPapers paper "%p"
+            safeSpawn "zathura" [filePath]
+
+myPapers :: X [String]
+myPapers = lines <$> findPapers "*.pdf" "%f\n"
+
+searchPapers :: [String] -> String -> [String]
+searchPapers papers search = filter go papers
+    where
+        searchWords = words $ map toLower search
+        go pName = all (`isInfixOf` map toLower pName) searchWords
+
+-- Unicode Prompt --
+
 data Unicode = Unicode
 
 instance XPrompt Unicode where
@@ -191,15 +234,15 @@ instance XPrompt Unicode where
     commandToComplete Unicode s = s
     nextCompletion Unicode = getNextCompletion
 
-myUnicodePrompt :: XPConfig -> X ()
-myUnicodePrompt conf = mkXPrompt Unicode conf{sorter=sorter} unicodeCompl typeChar
+unicodePrompt :: XPConfig -> X ()
+unicodePrompt conf = mkXPrompt Unicode conf{sorter=sorter} unicodeCompl typeChar
     where
         sorter = sortOn . rankMatch
         unicodeCompl "" = return []
         unicodeCompl str = return $ take 25 $ searchUnicode str
         typeChar charName =
             let codepoint = BS.unpack $ unicodeMap M.! (BS.pack charName)
-             in safeSpawn "/usr/bin/xdotool" ["key", "--clearmodifiers", codepoint]
+             in safeSpawn "xdotool" ["key", "--clearmodifiers", codepoint]
 
 -- negate because sortOn is an ascending sort
 rankMatch :: String -> String -> Int
