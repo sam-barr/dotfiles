@@ -2,6 +2,7 @@
 {-# LANGUAGE MultiWayIf            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE TemplateHaskell       #-}
 
 import           System.Environment
 import           XMonad
@@ -13,19 +14,20 @@ import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Layout.LayoutModifier (ModifiedLayout(..), LayoutModifier(..))
 import           XMonad.Layout.Dwindle
 import           XMonad.Layout.NoBorders
-import           XMonad.Layout.Spacing
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.Util.NamedScratchpad
+import           XMonad.Util.Run
 import qualified XMonad.StackSet as Stack
 import           XMonad.Prompt
 import           XMonad.Prompt.Shell
 import           XMonad.Prompt.Man
-import           XMonad.Prompt.Unicode
-
 
 import qualified Data.Set                     as S
-import           Data.List                    (isPrefixOf, isInfixOf)
+import qualified Data.Map.Strict              as M
+import           Data.List                    (isPrefixOf)
 import           Data.Char
+import qualified Data.ByteString.Char8        as BS
+import           Data.FileEmbed
 
 data DPI = HIGH | LOW
 
@@ -129,6 +131,8 @@ myManageHook = composeAll
     , className =? "discord" --> doShift "D"
     ] <+> namedScratchpadManageHook scratchpads
 
+--- Layouts ---
+
 type MyModifier a = ModifiedLayout SmartBorder a
 type MyModifier' a = ModifiedLayout WithBorder a
 type MyLayout = ModifiedLayout AA (Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full)))
@@ -154,6 +158,8 @@ instance LayoutModifier AA a where
     pureMess (AA av) m = AA <$> pureMess av m
     hook _ = asks config >>= logHook
 
+--- Prompts ---
+
 promptList :: [(String, XPConfig -> X ())]
 promptList =
     [ ("p", shellPrompt)
@@ -177,13 +183,38 @@ myXPConfig = def
     , historySize = 0
     }
 
+data Unicode = Unicode
+
+instance XPrompt Unicode where
+    showXPrompt Unicode = "Unicode: "
+    commandToComplete Unicode s = s
+    nextCompletion Unicode = getNextCompletion
+
 myUnicodePrompt :: XPConfig -> X ()
-myUnicodePrompt config = typeUnicodePrompt unicodeData $ config
-    { searchPredicate = isInfixOf
-    , maxComplRows = Just 1
-    }
+myUnicodePrompt xpconfig = mkXPrompt Unicode xpconfig unicodeCompl typeChar
     where
-        unicodeData = "/usr/share/unicode/UnicodeData.txt"
+        unicodeCompl "" = return []
+        unicodeCompl str = return $ take 20 $ searchUnicode str
+        typeChar charName =
+            let codepoint = BS.unpack $ unicodeMap M.! (BS.pack charName)
+             in safeSpawn "/usr/bin/xdotool" ["key", "--clearmodifiers", codepoint]
+
+unicodeData :: BS.ByteString
+unicodeData = $(embedFile "/usr/share/unicode/UnicodeData.txt")
+
+unicodeMap :: M.Map BS.ByteString BS.ByteString
+unicodeMap = foldr (uncurry M.insert . parseLine) M.empty $ BS.lines unicodeData
+    where
+        parseLine line = let f1:f2:_ = BS.split ';' line
+                          in (BS.map toLower f2, BS.cons 'U' f1)
+
+searchUnicode :: String -> [String]
+searchUnicode str = map BS.unpack $ filter go $ M.keys unicodeMap
+    where
+        strWords = map BS.pack . filter ((> 1) . length) . words $ map toLower str
+        go charName = all (`BS.isInfixOf` charName) strWords
+
+--- Named Scratchpads ---
 
 scratchpads :: NamedScratchpads
 scratchpads = map makeNS [ "kalk", "ghci" ]
