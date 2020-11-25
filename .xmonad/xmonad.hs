@@ -21,10 +21,11 @@ import qualified XMonad.StackSet as Stack
 import           XMonad.Prompt
 import           XMonad.Prompt.Shell
 import           XMonad.Prompt.Man
+import           XMonad.Prompt.FuzzyMatch
 
 import qualified Data.Set                     as S
 import qualified Data.Map.Strict              as M
-import           Data.List                    (isPrefixOf)
+import           Data.List                    (isPrefixOf, sortOn)
 import           Data.Char
 import qualified Data.ByteString.Char8        as BS
 import           Data.FileEmbed
@@ -191,13 +192,18 @@ instance XPrompt Unicode where
     nextCompletion Unicode = getNextCompletion
 
 myUnicodePrompt :: XPConfig -> X ()
-myUnicodePrompt xpconfig = mkXPrompt Unicode xpconfig unicodeCompl typeChar
+myUnicodePrompt conf = mkXPrompt Unicode conf{sorter=sorter} unicodeCompl typeChar
     where
+        sorter = sortOn . rankMatch
         unicodeCompl "" = return []
-        unicodeCompl str = return $ take 20 $ searchUnicode str
+        unicodeCompl str = return $ take 25 $ searchUnicode str
         typeChar charName =
             let codepoint = BS.unpack $ unicodeMap M.! (BS.pack charName)
              in safeSpawn "/usr/bin/xdotool" ["key", "--clearmodifiers", codepoint]
+
+-- negate because sortOn is an ascending sort
+rankMatch :: String -> String -> Int
+rankMatch search result = negate $ length $ filter (`elem` words result) $ words search
 
 unicodeData :: BS.ByteString
 unicodeData = $(embedFile "/usr/share/unicode/UnicodeData.txt")
@@ -211,8 +217,8 @@ unicodeMap = foldr (uncurry M.insert . parseLine) M.empty $ BS.lines unicodeData
 searchUnicode :: String -> [String]
 searchUnicode str = map BS.unpack $ filter go $ M.keys unicodeMap
     where
-        strWords = map BS.pack . filter ((> 1) . length) . words $ map toLower str
-        go charName = all (`BS.isInfixOf` charName) strWords
+        strWords = map BS.pack . words $ map toLower str
+        go charName = and [or [BS.isPrefixOf sw cw | cw <- BS.words charName] | sw <- strWords]
 
 --- Named Scratchpads ---
 
