@@ -12,10 +12,7 @@ done
 
 for pkg in "$aur_dir"/*/;
 do
-    if [[ ${arr[$pkg]} ]];
-    then
-        continue
-    fi
+    [[ ${arr[$pkg]} ]] && continue
 
     pushd "$pkg" > /dev/null || exit
 
