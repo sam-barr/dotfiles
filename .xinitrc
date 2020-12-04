@@ -49,12 +49,7 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 # If DP-2 is connected, assume I'm plugged into my monitor
-if xrandr | rg -q "DP-2 connected"
-then
-    display=low
-else
-    display=high
-fi
+xrandr | rg -q "DP-2 connected" && display=low || display=high
 
 "$HOME"/.local/bin/changeDisplay "$display"
 "$HOME"/.local/bin/startup

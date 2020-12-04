@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 git_pkgs=(xmonad-git xmonad-contrib-git mpv-git kalk-git)
 
 for pkg in "${git_pkgs[@]}"
@@ -7,7 +9,7 @@ do
     cd ~/.local/aur/"$pkg" || exit
     rm -rf -- *
     git reset --hard
-    makepkg -sric
+    yes | makepkg -sric
 done
 
 xmonad --recompile

@@ -53,9 +53,9 @@ myPP = namedScratchpadFilterOutWorkspacePP $ def
     , ppWsSep = ""
     , ppSep = ""
     , ppLayout = \str -> "#1" ++
-        if | "XXX"               `isPrefixOf` str -> "XXX"
-           | "Spacing Dwindle R" `isPrefixOf` str -> "Dwi"
-           | "Spacing Dwindle D" `isPrefixOf` str -> "Dwu"
+        if | "XXX"       `isPrefixOf` str -> "XXX"
+           | "Dwindle R" `isPrefixOf` str -> "Dwi"
+           | "Dwindle D" `isPrefixOf` str -> "Dwu"
            | otherwise                            -> take 3 str
     , ppOrder = take 2
     }
@@ -112,7 +112,7 @@ myConfig dpi = docks $ ewmh $ applyMyBindings
         }
 
 myWorkspaces :: [String]
-myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "D"]
+myWorkspaces = map show [1..9] ++ ["D"]
 
 myTerminal :: String
 myTerminal = "alacritty"
@@ -235,8 +235,9 @@ instance XPrompt Unicode where
     nextCompletion Unicode = getNextCompletion
 
 unicodePrompt :: XPConfig -> X ()
-unicodePrompt conf = mkXPrompt Unicode conf{sorter=sorter} unicodeCompl typeChar
+unicodePrompt conf = mkXPrompt Unicode conf' unicodeCompl typeChar
     where
+        conf' = conf {sorter=sorter,maxComplRows=Nothing}
         sorter = sortOn . rankMatch
         unicodeCompl "" = return []
         unicodeCompl str = return $ take 25 $ searchUnicode str

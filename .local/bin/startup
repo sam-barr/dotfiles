@@ -21,3 +21,8 @@ pamixer -m
 
 # make so screen doesn't turn off from idle
 xset s off -dpms
+
+# set cursor size
+mouse_size=75
+xsetroot -xcf /usr/share/icons/Adwaita/cursors/X_cursor "$mouse_size"
+echo "Xcursor.size: ${mouse_size}" | xrdb -merge

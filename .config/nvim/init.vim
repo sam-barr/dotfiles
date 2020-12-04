@@ -10,7 +10,7 @@ source ~/.config/nvim/abbreviations.vim
 "  My mappings
 noremap <Tab> <C-W><C-W>
 nnoremap Y y$
-map <C-s> 1z=
+map <leader>s 1z=
 
 colorscheme iceberg
 au ColorScheme * hi Normal ctermbg=None guibg=NONE

@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # Script to switch displays
 
@@ -7,7 +7,7 @@
 HIGH_DPI=336
 LOW_DPI=96
 
-pgrep -c firefox || echo "Firefox changes not being applied"
+pgrep -c firefox &> /dev/null && echo "Firefox changes not being applied"
 
 case "$1" in
     "high")
@@ -30,8 +30,8 @@ FIREFOX_CONFIG=$HOME/.mozilla/firefox/f4jbau39.default-release/user.js
 DISPLAY_FOLDER=$HOME/.local/displays/"$1"
 
 ln -sf "$DISPLAY_FOLDER"/alacritty.yml "$TERMINAL_CONFIG"
-pgrep -c firefox && echo "Close firefox to apply changes" || ln -sf "$DISPLAY_FOLDER"/firefox.js "$FIREFOX_CONFIG";
+pgrep -c firefox &> /dev/null || ln -sf "$DISPLAY_FOLDER"/firefox.js "$FIREFOX_CONFIG";
 
-pgrep -c xmonad && CURRENT_DISPLAY="$1" xmonad --restart
+pgrep -c xmonad &> /dev/null && CURRENT_DISPLAY="$1" xmonad --restart
 
 feh --no-fehbg --bg-fill "$HOME/Pictures/bg.png"
