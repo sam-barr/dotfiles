@@ -2,16 +2,20 @@ if [[ "$XDG_VTNR" == "1" ]]; then
     echo -n "Update pacman packages? [yN] "
     read REPLY
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        while ! ping -c 1 -W 1 8.8.8.8 &> /dev/null; do
+            echo "Waiting for internet..."
+            sleep 1
+        done
         echo ""
         sudo pacman -Syu
         update-aur
-    fi
 
-    echo -n "Recompile git packages? [yN] "
-    read REPLY
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-        echo ""
-        recompile-aur-git
+        echo -n "Recompile git packages? [yN] "
+        read REPLY
+        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+            echo ""
+            recompile-aur-git
+        fi
     fi
 
     if [[ -L /dev/disk/by-label/sam-barr-hdd ]]; then
