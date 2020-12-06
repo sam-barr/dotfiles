@@ -1,10 +1,6 @@
 key_bindings:
   - { key: Return,   mods: Control|Shift, action: SpawnNewInstance }
 
-env:
-    # makes colors from LS correct
-    TERM: xterm-256color
-
 font:
     size: 7.4
     normal:
