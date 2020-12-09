@@ -162,6 +162,10 @@ rounder :: Grid a -> Double -> Int
 rounder Grid = ceiling
 rounder Grim = floor
 
+ratio :: Grid a -> Double
+ratio Grid = 16/9
+ratio Grim = 4/3
+
 instance LayoutClass Grid a where
     pureLayout grid r = arrange grid r . Stack.integrate
 
@@ -169,7 +173,7 @@ arrange :: Grid a -> Rectangle -> [a] -> [(a, Rectangle)]
 arrange grid (Rectangle rx ry rw rh) st = zip st rectangles
     where
         nwins = length st
-        ncols = max 1 . min nwins . (rounder grid) . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * (4/3))
+        ncols = max 1 . min nwins . (rounder grid) . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * (ratio grid))
         mincs = max 1 $ nwins `div` ncols
         extrs = nwins - ncols * mincs
         chop :: Int -> Dimension -> [(Position, Dimension)]
