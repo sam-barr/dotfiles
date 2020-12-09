@@ -116,7 +116,7 @@ myTerminal :: String
 myTerminal = "alacritty"
 
 myNormalBorderColor :: String
-myNormalBorderColor = "#0F1117"
+myNormalBorderColor = "#161821"
 
 myFocusedBorderColor :: String
 myFocusedBorderColor = "#6B7089"

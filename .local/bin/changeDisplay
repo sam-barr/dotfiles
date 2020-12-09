@@ -33,5 +33,3 @@ ln -sf "$DISPLAY_FOLDER"/alacritty.yml "$TERMINAL_CONFIG"
 pgrep -c firefox &> /dev/null || ln -sf "$DISPLAY_FOLDER"/firefox.js "$FIREFOX_CONFIG";
 
 pgrep -c xmonad &> /dev/null && CURRENT_DISPLAY="$1" xmonad --restart
-
-feh --no-fehbg --bg-fill "$HOME/Pictures/bg.png"
