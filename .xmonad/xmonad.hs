@@ -12,7 +12,6 @@ import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers   hiding (CW)
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Layout.LayoutModifier (ModifiedLayout(..), LayoutModifier(..))
-import           XMonad.Layout.Dwindle
 import           XMonad.Layout.NoBorders
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.Util.NamedScratchpad
@@ -53,10 +52,11 @@ myPP = namedScratchpadFilterOutWorkspacePP $ def
     , ppWsSep = ""
     , ppSep = ""
     , ppLayout = \str -> "#1" ++
-        if | "XXX"       `isPrefixOf` str -> "XXX"
-           | "Dwindle R" `isPrefixOf` str -> "Dwi"
-           | "Dwindle D" `isPrefixOf` str -> "Dwu"
-           | otherwise                            -> take 3 str
+        if | "XXX"  `isPrefixOf` str -> "XXX"
+           | "Grid" `isPrefixOf` str -> "Grd"
+           | "Grim" `isPrefixOf` str -> "Grm"
+           | "Mir"  `isPrefixOf` str -> "Grm"
+           | otherwise               -> take 3 str
     , ppOrder = take 2
     }
 
@@ -136,14 +136,12 @@ myManageHook = composeAll
 
 type MyModifier a = ModifiedLayout SmartBorder a
 type MyModifier' a = ModifiedLayout WithBorder a
-type MyLayout = ModifiedLayout AA (Choose (MyModifier Dwindle) (Choose (MyModifier Dwindle) (MyModifier' Full)))
+type MyLayout = ModifiedLayout AA (Choose (MyModifier Grid) (Choose (MyModifier Grid) (MyModifier' Full)))
 
 myLayoutHook :: MyLayout Window
-myLayoutHook = avoid (modifier dwindle1 ||| modifier dwindle2 ||| modifier' Full)
+myLayoutHook = avoid (modifier Grid ||| modifier Grim ||| modifier' Full)
     where
         modifier  = smartBorders
-        dwindle1  = Dwindle R CW 1 1.1
-        dwindle2  = Dwindle D CCW 1 1.1
         modifier' = noBorders
 
 newtype AA a = AA { unAA :: AvoidStruts a }
@@ -158,6 +156,34 @@ instance LayoutModifier AA a where
     modifierDescription (AA (AvoidStruts set)) = if S.null set then "XXX" else ""
     pureMess (AA av) m = AA <$> pureMess av m
     hook _ = asks config >>= logHook
+
+data Grid a = Grid | Grim
+    deriving (Read, Show)
+
+instance LayoutClass Grid a where
+    pureLayout Grid r = arrange ceiling r . Stack.integrate
+    pureLayout Grim r = arrange round r . Stack.integrate
+
+arrange :: (Double -> Int) -> Rectangle -> [a] -> [(a, Rectangle)]
+arrange rounder (Rectangle rx ry rw rh) st = zip st rectangles
+    where
+        nwins = length st
+        ncols = max 1 . min nwins . rounder . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * (16/9))
+        mincs = max 1 $ nwins `div` ncols
+        extrs = nwins - ncols * mincs
+        chop :: Int -> Dimension -> [(Position, Dimension)]
+        chop n m = ((0, m - k * fromIntegral (pred n)) :) . map (flip (,) k) . tail . reverse . take n . tail . iterate (subtract k') $ m'
+            where
+                k = m `div` fromIntegral n
+                m' = fromIntegral m
+                k' = fromIntegral k
+        xcoords = chop ncols rw
+        ycoords = chop mincs rh
+        ycoords' = chop (succ mincs) rh
+        (xbase, xext) = splitAt (ncols - extrs) xcoords
+        rectangles = combine ycoords xbase ++ combine ycoords' xext
+            where
+            combine ys xs = [Rectangle (rx + x) (ry + y) w h | (x, w) <- xs, (y, h) <- ys]
 
 --- Prompts ---
 
