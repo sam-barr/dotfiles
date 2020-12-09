@@ -10,6 +10,7 @@ source ~/.config/nvim/abbreviations.vim
 "  My mappings
 noremap <Tab> <C-W><C-W>
 nnoremap Y y$
+nnoremap Q <nop>
 map <leader>s 1z=
 
 set background=dark

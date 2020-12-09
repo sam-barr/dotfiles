@@ -132,15 +132,42 @@ myManageHook = composeAll
 
 --- Layouts ---
 
-type MyModifier a = ModifiedLayout SmartBorder a
-type MyModifier' a = ModifiedLayout WithBorder a
-type MyLayout = ModifiedLayout AA (Choose (MyModifier Grid) (Choose (MyModifier Grid) (MyModifier' Full)))
+type Grid1 = ModifiedLayout SmartBorder Grid
+type Grid2 = ModifiedLayout SmartBorder (Mirror Grid)
+type Full' = ModifiedLayout WithBorder Full
+type MyLayout = ModifiedLayout AA (Choose Grid1 (Choose Grid2 Full'))
 
 myLayoutHook :: MyLayout Window
-myLayoutHook = avoid (modifier Grid ||| modifier Grim ||| modifier' Full)
+myLayoutHook = avoid (grid1 ||| grid2 ||| noBorders Full)
     where
-        modifier  = smartBorders
-        modifier' = noBorders
+        grid1 = smartBorders $ Grid (16/9)
+        grid2 = smartBorders $ Mirror $ Grid (4/3)
+
+-- Same thing as Grid from XMonad.Layout.Grid but I replaced "round" with "ceiling"
+data Grid a = Grid Double deriving (Read, Show)
+
+instance LayoutClass Grid a where
+    pureLayout (Grid d) r = arrange d r . Stack.integrate
+
+arrange :: Double -> Rectangle -> [a] -> [(a, Rectangle)]
+arrange aspectRatio (Rectangle rx ry rw rh) st = zip st rectangles
+    where
+        nwins = length st
+        ncols = max 1 . min nwins . ceiling . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * aspectRatio)
+        mincs = max 1 $ nwins `div` ncols
+        extrs = nwins - ncols * mincs
+        chop :: Int -> Dimension -> [(Position, Dimension)]
+        chop n m = ((0, m - k * fromIntegral (pred n)) :) . map (flip (,) k) . tail . reverse . take n . tail . iterate (subtract k') $ m'
+            where
+            k = m `div` fromIntegral n
+            m' = fromIntegral m
+            k' = fromIntegral k
+        xcoords = chop ncols rw
+        ycoords = chop mincs rh
+        ycoords' = chop (succ mincs) rh
+        (xbase, xext) = splitAt (ncols - extrs) xcoords
+        rectangles = combine ycoords xbase ++ combine ycoords' xext
+        combine ys xs = [Rectangle (rx + x) (ry + y) w h | (x, w) <- xs, (y, h) <- ys]
 
 newtype AA a = AA { unAA :: AvoidStruts a }
     deriving (Read, Show)
@@ -154,40 +181,6 @@ instance LayoutModifier AA a where
     modifierDescription (AA (AvoidStruts set)) = if S.null set then "XXX" else ""
     pureMess (AA av) m = AA <$> pureMess av m
     hook _ = asks config >>= logHook
-
-data Grid a = Grid | Grim
-    deriving (Read, Show)
-
-rounder :: Grid a -> Double -> Int
-rounder Grid = ceiling
-rounder Grim = floor
-
-ratio :: Grid a -> Double
-ratio Grid = 16/9
-ratio Grim = 4/3
-
-instance LayoutClass Grid a where
-    pureLayout grid r = arrange grid r . Stack.integrate
-
-arrange :: Grid a -> Rectangle -> [a] -> [(a, Rectangle)]
-arrange grid (Rectangle rx ry rw rh) st = zip st rectangles
-    where
-        nwins = length st
-        ncols = max 1 . min nwins . (rounder grid) . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * (ratio grid))
-        mincs = max 1 $ nwins `div` ncols
-        extrs = nwins - ncols * mincs
-        chop :: Int -> Dimension -> [(Position, Dimension)]
-        chop n m = ((0, m - k * fromIntegral (pred n)) :) . map (flip (,) k) . tail . reverse . take n . tail . iterate (subtract k') $ m'
-            where
-                k = m `div` fromIntegral n
-                m' = fromIntegral m
-                k' = fromIntegral k
-        xcoords = chop ncols rw
-        ycoords = chop mincs rh
-        ycoords' = chop (succ mincs) rh
-        (xbase, xext) = splitAt (ncols - extrs) xcoords
-        rectangles = combine ycoords xbase ++ combine ycoords' xext
-        combine ys xs = [Rectangle (rx + x) (ry + y) w h | (y, h) <- ys, (x, w) <- xs]
 
 --- Prompts ---
 
