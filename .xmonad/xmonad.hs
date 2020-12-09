@@ -20,7 +20,6 @@ import qualified XMonad.StackSet as Stack
 import           XMonad.Prompt
 import           XMonad.Prompt.Shell
 import           XMonad.Prompt.Man
-import           XMonad.Prompt.FuzzyMatch
 
 import qualified Data.Set                     as S
 import qualified Data.Map.Strict              as M
@@ -55,7 +54,6 @@ myPP = namedScratchpadFilterOutWorkspacePP $ def
         if | "XXX"  `isPrefixOf` str -> "XXX"
            | "Grid" `isPrefixOf` str -> "Grd"
            | "Grim" `isPrefixOf` str -> "Grm"
-           | "Mir"  `isPrefixOf` str -> "Grm"
            | otherwise               -> take 3 str
     , ppOrder = take 2
     }
@@ -160,15 +158,18 @@ instance LayoutModifier AA a where
 data Grid a = Grid | Grim
     deriving (Read, Show)
 
-instance LayoutClass Grid a where
-    pureLayout Grid r = arrange ceiling r . Stack.integrate
-    pureLayout Grim r = arrange round r . Stack.integrate
+rounder :: Grid a -> Double -> Int
+rounder Grid = ceiling
+rounder Grim = floor
 
-arrange :: (Double -> Int) -> Rectangle -> [a] -> [(a, Rectangle)]
-arrange rounder (Rectangle rx ry rw rh) st = zip st rectangles
+instance LayoutClass Grid a where
+    pureLayout grid r = arrange grid r . Stack.integrate
+
+arrange :: Grid a -> Rectangle -> [a] -> [(a, Rectangle)]
+arrange grid (Rectangle rx ry rw rh) st = zip st rectangles
     where
         nwins = length st
-        ncols = max 1 . min nwins . rounder . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * (16/9))
+        ncols = max 1 . min nwins . (rounder grid) . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * (4/3))
         mincs = max 1 $ nwins `div` ncols
         extrs = nwins - ncols * mincs
         chop :: Int -> Dimension -> [(Position, Dimension)]
@@ -182,8 +183,7 @@ arrange rounder (Rectangle rx ry rw rh) st = zip st rectangles
         ycoords' = chop (succ mincs) rh
         (xbase, xext) = splitAt (ncols - extrs) xcoords
         rectangles = combine ycoords xbase ++ combine ycoords' xext
-            where
-            combine ys xs = [Rectangle (rx + x) (ry + y) w h | (x, w) <- xs, (y, h) <- ys]
+        combine ys xs = [Rectangle (rx + x) (ry + y) w h | (y, h) <- ys, (x, w) <- xs]
 
 --- Prompts ---
 
@@ -224,9 +224,9 @@ paperPath :: FilePath
 paperPath = "/home/sam-barr/Documents/Papers"
 
 findPapers :: String -> String -> X String
-findPapers name format = runProcessWithInput "find"
+findPapers pattern format = runProcessWithInput "find"
     [ paperPath
-    , "-name", name
+    , "-name", pattern
     , "-printf", format
     ] ""
 
@@ -263,8 +263,8 @@ instance XPrompt Unicode where
 unicodePrompt :: XPConfig -> X ()
 unicodePrompt conf = mkXPrompt Unicode conf' unicodeCompl typeChar
     where
-        conf' = conf {sorter=sorter,maxComplRows=Nothing}
-        sorter = sortOn . rankMatch
+        conf' = conf {sorter=mySorter,maxComplRows=Nothing}
+        mySorter = sortOn . rankMatch
         unicodeCompl "" = return []
         unicodeCompl str = return $ take 25 $ searchUnicode str
         typeChar charName =
