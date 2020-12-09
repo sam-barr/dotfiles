@@ -13,12 +13,8 @@ nnoremap Y y$
 map <leader>s 1z=
 
 set background=dark
+set termguicolors
 colorscheme iceberg
-"au ColorScheme * hi Normal ctermbg=None guibg=NONE
-"au ColorScheme * hi NonText ctermbg=None guibg=NONE
-"au ColorScheme * hi EndOfBuffer ctermbg=None guibg=NONE
-"au ColorScheme * hi LineNr ctermbg=None guibg=NONE
-"au ColorScheme * hi Conceal ctermbg=None guibg=NONE
 
 set number relativenumber
 syntax on
