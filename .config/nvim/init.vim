@@ -7,15 +7,19 @@ call plug#end()
 
 source ~/.config/nvim/abbreviations.vim
 
-"  My mappings
+" My mappings
 noremap <Tab> <C-W><C-W>
 nnoremap Y y$
-nnoremap Q <nop>
 map <leader>s 1z=
 
-set background=dark
-set termguicolors
+" Saving me from myself
+nnoremap Q <nop>
+nnoremap q: <nop>
+
+" Colors
+set background=dark termguicolors
 colorscheme iceberg
+let g:lightline = { 'colorscheme': 'iceberg' }
 
 set number relativenumber
 syntax on
@@ -36,9 +40,6 @@ let g:vimtex_compiler_progname = 'nvr'
 
 " rust stuff
 let g:rustfmt_autosave = 1
-
-" lightline stuff
-let g:lightline = { 'colorscheme': 'iceberg' }
 
 " Some filetype autocmds
 autocmd FileType gitcommit,html,xhtml,markdown,tex set spell

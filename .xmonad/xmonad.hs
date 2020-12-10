@@ -141,7 +141,7 @@ myLayoutHook :: MyLayout Window
 myLayoutHook = avoid (grid1 ||| grid2 ||| noBorders Full)
     where
         grid1 = smartBorders $ Grid (16/9)
-        grid2 = smartBorders $ Mirror $ Grid (4/3)
+        grid2 = smartBorders $ Mirror $ Grid (3/4)
 
 -- Same thing as Grid from XMonad.Layout.Grid but I replaced "round" with "ceiling"
 data Grid a = Grid Double deriving (Read, Show)
@@ -195,10 +195,10 @@ promptList =
 myXPConfig :: XPConfig
 myXPConfig = def
     { font = "xft:Hasklug Nerd Font:dpi=336:size=8:style=bold"
-    , bgColor = "#0F1117"
+    , bgColor = "#161821"
     , fgColor = "#6B7089"
     , bgHLight = "#6B7089"
-    , fgHLight = "#0F1117"
+    , fgHLight = "#161821"
     , borderColor = "#6B7089"
     , promptBorderWidth = 6
     , height = 100
