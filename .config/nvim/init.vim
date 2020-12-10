@@ -9,14 +9,24 @@ source ~/.config/nvim/abbreviations.vim
 " My mappings
 noremap <Tab> <C-W><C-W>
 nnoremap Y y$
-map <leader>s 1z=
+nnoremap <leader>b :call ToggleBackground()<CR>
+nnoremap <leader>s 1z=
 
 " Saving me from myself
 nnoremap Q <nop>
 nnoremap q: <nop>
 
+function! ToggleBackground()
+    if &background == "dark"
+        set background=light
+    else
+        set background=dark
+    endif
+endfunction
+
 " Colors
-set background=dark termguicolors
+set background=dark
+set termguicolors
 colorscheme iceberg
 
 set number relativenumber

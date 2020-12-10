@@ -17,6 +17,6 @@ set notification-bg "#161821"
 set notification-error-bg "#161821"
 set notification-warning-bg "#161821"
 set recolor true
-map i recolor
+map b recolor
 
 set page-padding 200
