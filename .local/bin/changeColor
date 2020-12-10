@@ -8,12 +8,14 @@ case "$1" in
         new=light
         rec_old=true
         rec_new=false
+        xsetroot -solid '#E8E9EC'
         ;;
     "dark")
         old=light
         new=dark
         rec_old=false
         rec_new=true
+        xsetroot -solid '#161821'
         ;;
     *)
         echo "$1" is not a valid color

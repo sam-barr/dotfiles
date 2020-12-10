@@ -26,4 +26,5 @@ xset s off -dpms
 mouse_size=75
 xsetroot -xcf /usr/share/icons/Adwaita/cursors/X_cursor "$mouse_size"
 echo "Xcursor.size: ${mouse_size}" | xrdb -merge
-xsetroot -solid '#161821'
+
+changeColor dark
