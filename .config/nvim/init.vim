@@ -28,6 +28,8 @@ set spelllang=en
 set nohlsearch
 set clipboard=unnamedplus
 set conceallevel=2
+set cursorline
+set colorcolumn=90
 
 " tex stuff
 let g:vimtex_view_method='zathura'
@@ -49,31 +51,32 @@ autocmd FileType html,xhtml,xml set tabstop=2 shiftwidth=2
 set laststatus=2
 
 set statusline=
-set statusline+=%#NormalColor#%{(mode()=='n')?'\ \ Normal\ ':''}
-set statusline+=%#CommandColor#%{(mode()=='c')?'\ \ Command\ ':''}
-set statusline+=%#InsertColor#%{(mode()=='i')?'\ \ Insert\ ':''}
-set statusline+=%#ReplaceColor#%{(mode()=='R')?'\ \ Replace\ ':''}
-set statusline+=%#VisualColor#%{(mode()=='v')?'\ \ Visual\ ':''}
-set statusline+=%#VisualColor#%{(mode()==\"\\<C-v\>\")?'\ \ Visual\ Block\ ':''}
-set statusline+=%#VisualColor#%{(mode()=='V')?'\ \ Visual\ Line\ ':''}
+set statusline+=%#MyNormalColor#%{get(normal,mode(),'')}
+set statusline+=%#MyCommandColor#%{get(command,mode(),'')}
+set statusline+=%#MyInsertColor#%{get(insert,mode(),'')}
+set statusline+=%#MyReplaceColor#%{get(replace,mode(),'')}
+set statusline+=%#MyVisualColor#%{get(visual,mode(),'')}
 
-set statusline+=%#StatusFile#\ %t\           " name of file
-set statusline+=%#StatusType#%=\ %y\         " file type
-set statusline+=%#StatusPercent#\ %3p%%\     " percent through file
-set statusline+=%#StatusLoc#\ %{GetPos()}\   " Position in file
+set statusline+=%#MyStatusFile#\ %t\        " name of file
+set statusline+=%#MyStatusType#%=\ %r%m%y\  " read only/modified/filetype
+set statusline+=%#MyStatusPercent#\ %3p%%\  " percent through file
+set statusline+=%#MyStatusLoc#\ %l:%v\      " Position in file
 
-function GetPos()
-    let l:pos = getcurpos()
-    return l:pos[1] . ":" . l:pos[2]
-endfunction
+hi MyNormalColor guifg=#161821 guibg=#818596
+hi MyCommandColor guifg=#161821 guibg=#818596
+hi MyInsertColor guifg=#161821 guibg=#84A0C6 
+hi MyReplaceColor guifg=#161821 guibg=#E27878
+hi MyVisualColor guifg=#161821 guibg=#E2A478
 
-hi NormalColor guifg=#161821 guibg=#818596
-hi CommandColor guifg=#161821 guibg=#818596
-hi InsertColor guifg=#161821 guibg=#84A0C6 
-hi ReplaceColor guifg=#161821 guibg=#E27878
-hi VisualColor guifg=#161821 guibg=#E2A478
+hi MyStatusFile guifg=#C6C8D1 guibg=#2E313F
+hi MyStatusType guifg=#6B7089 guibg=#0F1117
+hi MyStatusLoc guifg=#161821 guibg=#818596
+hi MyStatusPercent guifg=#C6C8D1 guibg=#2E313F
 
-hi StatusFile guifg=#C6C8D1 guibg=#2E313F
-hi StatusType guifg=#6B7089 guibg=#0F1117
-hi StatusLoc guifg=#161821 guibg=#818596
-hi StatusPercent guifg=#C6C8D1 guibg=#2E313F
+let normal  = {'n': "  Normal  "}
+let command = {'c': "  Command "}
+let insert  = {"i": "  Insert  "}
+let replace = {"R": "  Replace "}
+let visual  = {"v": "  Visual  ",
+        \ "\<C-v>": "  V-Block ",
+        \      "V": "  V-Line  "}
