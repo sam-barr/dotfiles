@@ -1,0 +1,51 @@
+" iceberg
+" by puven12
+"
+" This colorscheme is based on iceberg colorscheme for vim
+" by cocopon
+
+highlight clear
+
+highlight Win cterm=none ctermfg=0 ctermbg=default
+highlight Directory cterm=bold ctermfg=31 ctermbg=default
+highlight Link cterm=bold ctermfg=180 ctermbg=default
+highlight BrokenLink cterm=bold ctermfg=red ctermbg=248
+highlight Socket cterm=bold ctermfg=green ctermbg=default
+highlight Device cterm=bold ctermfg=red ctermbg=default
+highlight Fifo cterm=bold ctermfg=64 ctermbg=default
+highlight Executable cterm=none ctermfg=64 ctermbg=default
+highlight Selected cterm=none ctermfg=0 ctermbg=251
+highlight CurrLine cterm=reverse
+highlight TopLine cterm=none ctermfg=0 ctermbg=default
+highlight TopLineSel cterm=bold ctermfg=25 ctermbg=default
+highlight StatusLine cterm=none ctermfg=248 ctermbg=lightblack
+highlight WildMenu cterm=underline,reverse ctermfg=0 ctermbg=black
+highlight CmdLine cterm=none ctermfg=0 ctermbg=default
+highlight ErrorMsg cterm=none ctermfg=125 ctermbg=default
+highlight Border cterm=none ctermfg=black ctermbg=default
+highlight JobLine cterm=bold,reverse ctermfg=black ctermbg=0
+highlight SuggestBox cterm=bold ctermfg=default ctermbg=default
+highlight CmpMismatch cterm=bold ctermfg=0 ctermbg=red
+highlight AuxWin cterm=bold,underline,reverse,standout ctermfg=default ctermbg=default
+
+" Additions by me for filetype colors
+
+" figure out these colors ???
+
+" media
+highlight {*.aac,*.anx,*.asf,*.au,*.avi,*.ts,*.axa,*.axv,*.divx,*.flac,*.m2a,
+          \*.m2v,*.m4a,*.m4p,*.m4v,*.mid,*.midi,*.mka,*.mkv,*.mov,*.mp3,*.mp4,
+          \*.flv,*.mp4v,*.mpc,*.mpeg,*.mpg,*.nuv,*.oga,*.ogg,*.ogv,*.ogx,*.pbm,
+          \*.pgm,*.qt,*.ra,*.ram,*.rm,*.spx,*.vob,*.wav,*.wma,*.wmv,*.xvid,
+          \*.ac3}
+        \ cterm=none ctermfg=22 ctermbg=default
+" images
+highlight {*.bmp,*.gif,*.jpeg,*.jpg,*.ico,*.pdf,*.png,*.ppm,*.svg,*.svgz,*.tga,*.tif,*.webp
+          \*.tiff,*.xbm,*.xcf,*.xpm,*.xspf,*.xwd}
+        \ cterm=none ctermfg=20 ctermbg=default
+
+" archives
+highlight {*.7z,*.ace,*.arj,*.bz2,*.cpio,*.deb,*.dz,*.gz,*.jar,*.lzh,*.lzma,
+          \*.rar,*.rpm,*.rz,*.tar,*.taz,*.tb2,*.tbz,*.tbz2,*.tgz,*.tlz,*.trz,
+          \*.txz,*.tz,*.tz2,*.xz,*.z,*.zip,*.zoo}
+        \ cterm=none ctermfg=138 ctermbg=default
