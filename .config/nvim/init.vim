@@ -18,6 +18,9 @@ inoremap <C-s> <Esc>:call SpellcheckPrevious()<CR>a
 nnoremap Q <nop>
 nnoremap q: <nop>
 
+" create latex environment
+inoremap <C-e> <Esc>"syiWcc\begin{<Esc>"spa}<Cr>\end{<Esc>"spa}<Esc>O
+
 function! ToggleBackground()
     if &background == "dark"
         set background=light
