@@ -7,10 +7,12 @@ call plug#end()
 source ~/.config/nvim/abbreviations.vim
 
 " My mappings
-noremap <Tab> <C-W><C-W>
+nnoremap <Tab> <C-W><C-W>
 nnoremap Y y$
-nnoremap <leader>b :call ToggleBackground()<CR>
-nnoremap <leader>s 1z=
+nnoremap <C-b> :call ToggleBackground()<CR>
+
+nnoremap <C-s> :call SpellcheckPrevious()<CR>
+inoremap <C-s> <Esc>:call SpellcheckPrevious()<CR>a
 
 " Saving me from myself
 nnoremap Q <nop>
@@ -21,6 +23,28 @@ function! ToggleBackground()
         set background=light
     else
         set background=dark
+    endif
+endfunction
+
+function! SpellcheckPrevious()
+    " spellcheck the previous error, and go back to where you were originally
+    " adjusting left or right accordingly if the line length changed
+    let l:length1 = strwidth(getline('.'))
+    try
+        norm ms[s1z=`s
+    catch
+        echohl WarningMsg
+        echo "Spell checking not enabled"
+        echohl None
+        return
+    endtry
+    let l:length2 = strwidth(getline('.'))
+    if l:length1 > l:length2
+        let l:move = l:length1 - l:length2 - 1
+        echo "norm " . l:move . "h"
+    elseif l:length2 > l:length1
+        let l:move = l:length2 - l:length1
+        execute "norm " . l:move . "l"
     endif
 endfunction
 
