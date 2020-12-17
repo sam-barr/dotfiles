@@ -1,0 +1,15 @@
+#!/bin/bash
+
+new_file=$(date "+$HOME/Videos/screencasts/%Y-%m-%d-%T.mkv")
+tmp_file="$HOME/Videos/screencasts/tmp.mkv"
+
+# ffmpeg-dummy is a symlink to ffmpeg
+# that way I can safely kill ffmpeg-dummy without interfering with other
+# ffmpeg's that may be happening
+ffmpeg-dummy -f x11grab -framerate 25 -i "$DISPLAY" \
+    -c:v libx265 -preset ultrafast "$tmp_file"
+
+ffmpeg -i "$tmp_file" -vf scale=-1:1080 \
+    -crf 23 -c:v libx265 -preset veryslow "$new_file"
+
+rm "$tmp_file"

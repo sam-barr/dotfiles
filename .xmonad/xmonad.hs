@@ -5,6 +5,7 @@
 {-# LANGUAGE TemplateHaskell       #-}
 
 import           System.Environment
+import           System.Posix.Process
 import           XMonad
 import           XMonad.Actions.WindowGo
 import           XMonad.Hooks.DynamicLog
@@ -72,6 +73,7 @@ myKeyBindings =
     , ("M-i",           spawn "firefox --private-window")
     , ("M-S-l",         spawn "physlock -d")
     , ("M-S-f",         spawn "scrot ~/Pictures/screenshots/%Y-%m-%d-%T.png")
+    , ("M-S-v",         spawn "screen-recorder-manager")
     , ("M-h",           spawn "headphones")
     , ("M-S-h",         spawn "headset")
     , ("M-v",           spawn $ myTerminal ++ " --command ~/.config/vifm/scripts/vifmrun ~ ~/Documents")
@@ -81,7 +83,6 @@ myKeyBindings =
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
-
 gotoDiscord :: X ()
 gotoDiscord = flip raiseMaybe (className =? "discord") $ do
     windows $ Stack.greedyView "D"

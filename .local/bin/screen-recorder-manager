@@ -1,0 +1,9 @@
+#!/bin/bash -x
+
+processes=$(pgrep ffmpeg-dummy)
+
+if [ -n "$processes" ]; then
+    kill -INT $processes
+else
+    screen-recorder &> /dev/null &
+fi
