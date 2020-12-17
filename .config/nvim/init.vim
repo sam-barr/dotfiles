@@ -29,9 +29,10 @@ endfunction
 function! SpellcheckPrevious()
     " spellcheck the previous error, and go back to where you were originally
     " adjusting left or right accordingly if the line length changed
+    let l:col = getcurpos()[2]
     let l:length1 = strwidth(getline('.'))
     try
-        norm ms[s1z=`s
+        normal! ms[s1z=`s
     catch
         echohl WarningMsg
         echo "Spell checking not enabled"
@@ -39,12 +40,10 @@ function! SpellcheckPrevious()
         return
     endtry
     let l:length2 = strwidth(getline('.'))
-    if l:length1 > l:length2
-        let l:move = l:length1 - l:length2 - 1
-        echo "norm " . l:move . "h"
+    if l:length1 > l:length2 && l:col < l:length2
+        execute "norm" (l:length1 - l:length2) . "h"
     elseif l:length2 > l:length1
-        let l:move = l:length2 - l:length1
-        execute "norm " . l:move . "l"
+        execute "norm" (l:length2 - l:length1) . "l"
     endif
 endfunction
 
