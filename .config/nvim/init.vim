@@ -93,7 +93,7 @@ set statusline+=%#MyInsertColor#%{get(insert,mode(),'')}
 set statusline+=%#MyReplaceColor#%{get(replace,mode(),'')}
 set statusline+=%#MyVisualColor#%{get(visual,mode(),'')}
 
-set statusline+=%#MyStatusFile#\ %t\        " name of file
+set statusline+=%#MyStatusFile#\ %f\        " name of file
 set statusline+=%#MyStatusType#%=\ %r%m%y\  " read only/modified/filetype
 set statusline+=%#MyStatusPercent#\ %3p%%\  " percent through file
 set statusline+=%#MyStatusLoc#\ %l:%v\      " Position in file
