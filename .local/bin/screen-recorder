@@ -1,7 +1,7 @@
 #!/bin/bash
 
 new_file=$(date "+$HOME/Videos/screencasts/%Y-%m-%d-%T.mkv")
-tmp_file="$HOME/Videos/screencasts/tmp.mkv"
+tmp_file=$(mktemp /tmp/screen-recorder.XXX.mkv)
 
 # ffmpeg-dummy is a symlink to ffmpeg
 # that way I can safely kill ffmpeg-dummy without interfering with other
