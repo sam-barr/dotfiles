@@ -199,10 +199,6 @@ filextype *.ipe ipe %c %i &
 
 " Pdf
 filextype *.pdf,*.cbz,*.cbr zathura %c %i &, apvlv %c, xpdf %c
-fileviewer *.pdf
-        \ vifmimg pdfpreview %px %py %pw %ph %c
-        \ %pc
-        \ vifmimg clear
 
 " PostScript
 filextype *.ps,*.eps,*.ps.gz
@@ -248,13 +244,11 @@ filetype *.[1-8] man ./%c
 fileviewer *.[1-8] man ./%c | col -b
 
 " Images
-filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp
-        \ {View in sxiv}
-        \ sxiv %f &,
+filextype *.png,*.jpg,*.jpeg
+        \ {View in sbimg}
+        \ sbimg %f &,
 fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp
-         \ vifmimg draw %px %py %pw %ph %c
-         \ %pc
-         \ vifmimg clear
+         \ file %c
 
 " MD5
 filetype *.md5

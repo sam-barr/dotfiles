@@ -6,7 +6,7 @@ tmp_file=$(mktemp /tmp/screen-recorder.XXX.mp4)
 # ffmpeg-dummy is a symlink to ffmpeg
 # that way I can safely kill ffmpeg-dummy without interfering with other
 # ffmpeg's that may be happening
-echo y | ffmpeg-dummy -f x11grab -framerate 25 -i "$DISPLAY" \
+echo y | ffmpeg-dummy -f x11grab -framerate 60 -i "$DISPLAY" \
     -c:v libx264 -preset ultrafast "$tmp_file"
 
 ffmpeg -i "$tmp_file" -vf scale=-1:1080 \
