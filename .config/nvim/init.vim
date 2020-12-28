@@ -7,9 +7,10 @@ call plug#end()
 source ~/.config/nvim/abbreviations.vim
 
 " My mappings
-nnoremap <Tab> <C-W><C-W>
+nnoremap <Tab> <C-w>
 nnoremap Y y$
 nnoremap <C-b> :call ToggleBackground()<CR>
+inoremap <C-b> <Esc>:call ToggleBackground()<CR>a
 
 nnoremap <C-s> :call SpellcheckPrevious()<CR>
 inoremap <C-s> <Esc>:call SpellcheckPrevious()<CR>a
