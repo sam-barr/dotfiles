@@ -195,7 +195,7 @@ promptList =
 
 myXPConfig :: XPConfig
 myXPConfig = def
-    { font = "xft:Hasklug Nerd Font:dpi=336:size=8:style=bold"
+    { font = "xft:Source Code Pro:dpi=336:size=8:style=bold"
     , bgColor = "#161821"
     , fgColor = "#6B7089"
     , bgHLight = "#6B7089"

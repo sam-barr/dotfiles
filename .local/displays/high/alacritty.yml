@@ -4,13 +4,13 @@ key_bindings:
 font:
     size: 7.4
     normal:
-        family: Hasklug Nerd Font
+        family: Source Code Pro
         style: Regular
     bold:
-        family: Hasklug Nerd Font
+        family: Source Code Pro
         style: Bold
     italic:
-        family: Hasklug Nerd Font
+        family: Source Code Pro
         style: Italic
 
 background_opacity: 1.0
