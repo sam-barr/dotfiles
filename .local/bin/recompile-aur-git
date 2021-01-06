@@ -2,7 +2,7 @@
 
 set -e
 
-git_pkgs=(xmonad-git xmonad-contrib-git mpv-git kalk-git)
+git_pkgs=(xmonad-git xmonad-contrib-git mpv-git)
 
 for pkg in "${git_pkgs[@]}"
 do
