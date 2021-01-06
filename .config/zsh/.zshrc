@@ -33,7 +33,7 @@ alias vsplit="vim -O"
 alias present="zathura --mode=presentation --page=0 --config-dir=/"
 alias internet="ping 8.8.8.8"
 
-alias cinstall="cargo install --path . --root ~/.local --force --locked"
+alias cinstall="cargo install --path . --force --locked"
 
 alias config="/usr/bin/git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
 alias bash="HISTFILE=/dev/null bash" # don't create a history file when using bash
