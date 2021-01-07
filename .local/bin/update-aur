@@ -2,7 +2,7 @@
 
 aur_dir=$HOME/.local/aur
 
-ignore=( "zsa-wally-cli" "epubcheck" "godot" )
+ignore=( "kalk-git" "zsa-wally-cli" "epubcheck" "godot" )
 
 declare -A arr
 for pkg in "${ignore[@]}"
