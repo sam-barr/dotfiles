@@ -2,13 +2,19 @@
 
 set -e
 
-git_pkgs=(xmonad-git xmonad-contrib-git mpv-git)
+if [[ "$UID" != 0 ]]; then
+    echo "Please run with sudo"
+    exit 1
+fi
+
+git_pkgs=(xmonad-git xmonad-contrib-git mpv-git wlroots-git)
 
 for pkg in "${git_pkgs[@]}"
 do
-    cd ~/.local/aur/"$pkg" || exit
-    yes | makepkg -sricf
+    cd /home/sam-barr/.local/aur/"$pkg" || exit
+    yes | runuser -u sam-barr -- makepkg -sricf
 done
 
-xmonad --recompile
-xmonad --restart
+runuser -u sam-barr -- xmonad --recompile
+runuser -u sam-barr -- xmonad --restart
+yes | pacman -Rns wlroots-git-debug
