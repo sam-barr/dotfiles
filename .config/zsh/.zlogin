@@ -14,7 +14,7 @@ if [[ "$XDG_VTNR" == "1" ]]; then
         read REPLY
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
             echo ""
-            recompile-aur-git
+            sudo recompile-aur-git
         fi
     fi
 

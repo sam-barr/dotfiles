@@ -295,4 +295,4 @@ scratchpads = map makeNS [ "kalk", "ghci" ]
     where
         makeNS p = NS p (makeCmd p) (title =? p) scratchpadHook
         makeCmd p = unwords [ myTerminal , "--title", p , "--command", p ]
-        scratchpadHook = customFloating $ Stack.RationalRect 0 0 1 (1/15)
+        scratchpadHook = customFloating $ Stack.RationalRect (1/4) (1/4) (1/2) (1/2)

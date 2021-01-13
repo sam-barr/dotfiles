@@ -15,6 +15,6 @@ do
     yes | runuser -u sam-barr -- makepkg -sricf
 done
 
+yes | pacman -Rns wlroots-git-debug
 runuser -u sam-barr -- xmonad --recompile
 runuser -u sam-barr -- xmonad --restart
-yes | pacman -Rns wlroots-git-debug
