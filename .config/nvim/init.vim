@@ -106,7 +106,7 @@ hi MyReplaceColor guifg=#161821 guibg=#E27878
 hi MyVisualColor guifg=#161821 guibg=#E2A478
 
 hi MyStatusFile guifg=#C6C8D1 guibg=#2E313F
-hi MyStatusType guifg=#6B7089 guibg=#0F1117
+hi MyStatusType guifg=#444B71 guibg=#1E2132
 hi MyStatusLoc guifg=#161821 guibg=#818596
 hi MyStatusPercent guifg=#C6C8D1 guibg=#2E313F
 
