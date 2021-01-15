@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if [[ $UID != 0 ]]; then
-    echo "Please run with sudo"
-    exit 1
-fi
-
-rm /var/lib/pacman/db.lck

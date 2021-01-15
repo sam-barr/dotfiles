@@ -45,6 +45,8 @@ alias disasm='objdump -drRwC -Mintel --no-show-raw-insn'
 
 alias sshcs='env TERM=xterm-256color ssh -Y s4barr@linux.student.cs.uwaterloo.ca'
 
+alias fix-pacman='rm /var/lib/pacman/db.lck'
+
 #end aliases
 
 export KEYTIMEOUT=5
