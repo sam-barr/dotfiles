@@ -195,7 +195,7 @@ set classify+=' ::*.avi,,*.ts,,*.axv,,*.divx,,*.m2v,,*.m4p,,*.m4v,,*.mkv,,*.m
 " program.
 
 " IPE
-filextype *.ipe ipe %c %i &
+filextype *.ipe,x_graph.pdf ipe %c %i &
 
 " Pdf
 filextype *.pdf,*.cbz,*.cbr zathura %c %i &, apvlv %c, xpdf %c

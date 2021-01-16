@@ -291,8 +291,11 @@ searchUnicode str = map BS.unpack $ filter go $ M.keys unicodeMap
 --- Named Scratchpads ---
 
 scratchpads :: NamedScratchpads
-scratchpads = map makeNS [ "kalk", "ghci" ]
+scratchpads = map makeNS [
+        ("kalk", ["-i", "/home/sam-barr/.config/init.kalk"]),
+        ("ghci", [])
+    ]
     where
-        makeNS p = NS p (makeCmd p) (title =? p) scratchpadHook
-        makeCmd p = unwords [ myTerminal , "--title", p , "--command", p ]
+        makeNS a@(p, args) = NS p (makeCmd a) (title =? p) scratchpadHook
+        makeCmd (p, args) = unwords $ [ myTerminal , "--title", p , "--command", p ] ++ args
         scratchpadHook = customFloating $ Stack.RationalRect (1/4) (1/4) (1/2) (1/2)
