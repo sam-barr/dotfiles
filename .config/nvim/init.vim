@@ -80,7 +80,7 @@ let g:rustfmt_autosave = 1
 " Some filetype autocmds
 autocmd FileType gitcommit,html,xhtml,markdown,tex set spell
 autocmd FileType c,cpp set tabstop=8 shiftwidth=8
-autocmd FileType html,xhtml,xml set tabstop=2 shiftwidth=2
+autocmd FileType bread,html,xhtml,xml set tabstop=2 shiftwidth=2
 
 " status line
 
@@ -99,16 +99,34 @@ set statusline+=%#MyStatusType#%=\ %r%m%y\  " read only/modified/filetype
 set statusline+=%#MyStatusPercent#\ %3p%%\  " percent through file
 set statusline+=%#MyStatusLoc#\ %l:%v\      " Position in file
 
-hi MyNormalColor guifg=#161821 guibg=#818596
-hi MyCommandColor guifg=#161821 guibg=#818596
-hi MyInsertColor guifg=#161821 guibg=#84A0C6 
-hi MyReplaceColor guifg=#161821 guibg=#E27878
-hi MyVisualColor guifg=#161821 guibg=#E2A478
+function! StatuslineColors()
+    if &background == 'dark'
+        hi MyNormalColor guifg=#161821 guibg=#818596
+        hi MyCommandColor guifg=#161821 guibg=#818596
+        hi MyInsertColor guifg=#161821 guibg=#84A0C6 
+        hi MyReplaceColor guifg=#161821 guibg=#E27878
+        hi MyVisualColor guifg=#161821 guibg=#E2A478
 
-hi MyStatusFile guifg=#C6C8D1 guibg=#2E313F
-hi MyStatusType guifg=#444B71 guibg=#1E2132
-hi MyStatusLoc guifg=#161821 guibg=#818596
-hi MyStatusPercent guifg=#C6C8D1 guibg=#2E313F
+        hi MyStatusFile guifg=#C6C8D1 guibg=#2E313F
+        hi MyStatusType guifg=#444B71 guibg=#1E2132
+        hi MyStatusLoc guifg=#161821 guibg=#818596
+        hi MyStatusPercent guifg=#C6C8D1 guibg=#2E313F
+    else
+        hi MyNormalColor guifg=#E8E9EC guibg=#757CA3
+        hi MyCommandColor guifg=#E8E9EC guibg=#757CA3
+        hi MyInsertColor guifg=#E8E9EC guibg=#84A0C6 
+        hi MyReplaceColor guifg=#E8E9EC guibg=#CC517A
+        hi MyVisualColor guifg=#E8E9EC guibg=#C57339
+
+        hi MyStatusFile guifg=#33374C guibg=#9FA6C0
+        hi MyStatusType guifg=#444B71 guibg=#DCDFE7
+        hi MyStatusLoc guifg=#9FA7BD guibg=#757CA3
+        hi MyStatusPercent guifg=#33374C guibg=#9FA6C0
+    endif
+endfunction
+
+call StatuslineColors()
+autocmd ColorScheme * call StatuslineColors()
 
 let normal  = {'n': "  Normal  "}
 let command = {'c': "  Command "}
