@@ -51,11 +51,7 @@ myPP = namedScratchpadFilterOutWorkspacePP $ def
     , ppHidden = ("#0" ++) . wrap " " " "
     , ppWsSep = ""
     , ppSep = ""
-    , ppLayout = \str -> "#1" ++
-        if | "XXX"  `isPrefixOf` str -> "XXX"
-           | "Grid" `isPrefixOf` str -> "Grd"
-           | "Grim" `isPrefixOf` str -> "Grm"
-           | otherwise               -> take 3 str
+    , ppLayout = \str -> "#1" ++ (take 3 str)
     , ppOrder = take 2
     }
 
@@ -83,6 +79,7 @@ myKeyBindings =
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
+
 gotoDiscord :: X ()
 gotoDiscord = flip raiseMaybe (className =? "discord") $ do
     windows $ Stack.greedyView "D"
@@ -133,42 +130,19 @@ myManageHook = composeAll
 
 --- Layouts ---
 
-type Grid1 = ModifiedLayout SmartBorder Grid
-type Grid2 = ModifiedLayout SmartBorder (Mirror Grid)
+type Tall1 = ModifiedLayout SmartBorder Tall
+type Tall2 = ModifiedLayout SmartBorder (Mirror Tall)
 type Full' = ModifiedLayout WithBorder Full
-type MyLayout = ModifiedLayout AA (Choose Grid1 (Choose Grid2 Full'))
+type MyLayout = ModifiedLayout AA (Choose Tall1 (Choose Tall2 Full'))
 
 myLayoutHook :: MyLayout Window
-myLayoutHook = avoid (grid1 ||| grid2 ||| noBorders Full)
+myLayoutHook = avoid (tall ||| mtall ||| noBorders Full)
     where
-        grid1 = smartBorders $ Grid (16/9)
-        grid2 = smartBorders $ Mirror $ Grid (3/4)
-
--- Same thing as Grid from XMonad.Layout.Grid but I replaced "round" with "ceiling"
-data Grid a = Grid Double deriving (Read, Show)
-
-instance LayoutClass Grid a where
-    pureLayout (Grid d) r = arrange d r . Stack.integrate
-
-arrange :: Double -> Rectangle -> [a] -> [(a, Rectangle)]
-arrange aspectRatio (Rectangle rx ry rw rh) st = zip st rectangles
-    where
-        nwins = length st
-        ncols = max 1 . min nwins . ceiling . sqrt $ fromIntegral nwins * fromIntegral rw / (fromIntegral rh * aspectRatio)
-        mincs = max 1 $ nwins `div` ncols
-        extrs = nwins - ncols * mincs
-        chop :: Int -> Dimension -> [(Position, Dimension)]
-        chop n m = ((0, m - k * fromIntegral (pred n)) :) . map (flip (,) k) . tail . reverse . take n . tail . iterate (subtract k') $ m'
-            where
-            k = m `div` fromIntegral n
-            m' = fromIntegral m
-            k' = fromIntegral k
-        xcoords = chop ncols rw
-        ycoords = chop mincs rh
-        ycoords' = chop (succ mincs) rh
-        (xbase, xext) = splitAt (ncols - extrs) xcoords
-        rectangles = combine ycoords xbase ++ combine ycoords' xext
-        combine ys xs = [Rectangle (rx + x) (ry + y) w h | (x, w) <- xs, (y, h) <- ys]
+        tall = smartBorders $ Tall nmaster delta ratio
+        mtall = smartBorders $ Mirror $ Tall nmaster delta ratio
+        nmaster = 1
+        delta = 3 / 100
+        ratio = 1 / 2
 
 newtype AA a = AA { unAA :: AvoidStruts a }
     deriving (Read, Show)
@@ -297,5 +271,5 @@ scratchpads = map makeNS [
     ]
     where
         makeNS a@(p, args) = NS p (makeCmd a) (title =? p) scratchpadHook
-        makeCmd (p, args) = unwords $ [ myTerminal , "--title", p , "--command", p ] ++ args
+        makeCmd (p, args) = unwords $ [ myTerminal , "-t", p , "-e", p ] ++ args
         scratchpadHook = customFloating $ Stack.RationalRect (1/4) (1/4) (1/2) (1/2)
