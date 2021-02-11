@@ -81,6 +81,7 @@ let g:rustfmt_autosave = 1
 autocmd FileType gitcommit,html,xhtml,markdown,tex set spell
 autocmd FileType c,cpp set tabstop=8 shiftwidth=8
 autocmd FileType bread,html,xhtml,xml set tabstop=2 shiftwidth=2
+autocmd BufRead,BufNewFile *.h,*.c set filetype=c
 
 " status line
 
