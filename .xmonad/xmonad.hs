@@ -5,7 +5,6 @@
 {-# LANGUAGE TemplateHaskell       #-}
 
 import           System.Environment
-import           System.Posix.Process
 import           XMonad
 import           XMonad.Actions.WindowGo
 import           XMonad.Hooks.DynamicLog
@@ -24,7 +23,7 @@ import           XMonad.Prompt.Man
 
 import qualified Data.Set                     as S
 import qualified Data.Map.Strict              as M
-import           Data.List                    (isPrefixOf, sortOn, isInfixOf)
+import           Data.List                    (sortOn, isInfixOf)
 import           Data.Char
 import qualified Data.ByteString.Char8        as BS
 import           Data.FileEmbed
@@ -45,7 +44,7 @@ myBar :: String
 myBar = "sam-bar"
 
 myPP :: PP
-myPP = namedScratchpadFilterOutWorkspacePP $ def
+myPP = filterOutWsPP [] $ def
     { ppHiddenNoWindows = ("#1" ++) . wrap " " " "
     , ppCurrent = ("#2" ++) . wrap "[" "]"
     , ppHidden = ("#0" ++) . wrap " " " "
@@ -270,6 +269,6 @@ scratchpads = map makeNS [
         ("ghci", [])
     ]
     where
-        makeNS a@(p, args) = NS p (makeCmd a) (title =? p) scratchpadHook
+        makeNS a@(p, _) = NS p (makeCmd a) (title =? p) scratchpadHook
         makeCmd (p, args) = unwords $ [ myTerminal , "-t", p , "-e", p ] ++ args
         scratchpadHook = customFloating $ Stack.RationalRect (1/4) (1/4) (1/2) (1/2)
