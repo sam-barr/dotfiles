@@ -44,7 +44,7 @@ myBar :: String
 myBar = "sam-bar"
 
 myPP :: PP
-myPP = filterOutWsPP [] $ def
+myPP = filterOutWsPP ["NSP"] $ def
     { ppHiddenNoWindows = ("#1" ++) . wrap " " " "
     , ppCurrent = ("#2" ++) . wrap "[" "]"
     , ppHidden = ("#0" ++) . wrap " " " "
