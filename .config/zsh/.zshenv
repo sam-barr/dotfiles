@@ -1,6 +1,8 @@
 typeset -U PATH path
-path=("$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/.gem/ruby/2.7.0/bin" "$path[@]")
+path=("$HOME/.cargo/bin" "$HOME/.local/bin" "$path[@]")
 export PATH
+
+export GDK_SCALE=2
 
 export EDITOR=/usr/bin/nvim
 

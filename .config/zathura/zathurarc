@@ -1,6 +1,6 @@
 set selection-clipboard clipboard
 
-set font "Source Code Pro 25"
+set font "Source Code Pro 13"
 
 set statusbar-fg "#C6C8D1"
 set statusbar-bg "#161821"

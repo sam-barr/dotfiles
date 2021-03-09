@@ -31,7 +31,7 @@ alias vim=nvim
 alias vsplit="vim -O"
 
 alias present="zathura --mode=presentation --page=0 --config-dir=/"
-alias internet="ping 8.8.8.8"
+alias internet="ping -c5 8.8.8.8"
 
 alias cinstall="cargo install --path . --force --locked"
 
