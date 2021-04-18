@@ -231,11 +231,6 @@ fileviewer *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
           \*.as[fx]
           \ ffprobe -pretty %c 2>&1
 
-" Web
-filextype *.html,*.htm
-        \ {Open with firefox}
-        \ firefox %f %i &,
-
 " Object
 filetype *.o nm %f | less
 
