@@ -20,7 +20,7 @@ nnoremap Q <nop>
 nnoremap q: <nop>
 
 " create latex environment
-inoremap <C-e> <Esc>"syiWcc\begin{<Esc>"spa}<Cr>\end{<Esc>"spa}<Esc>O
+inoremap <C-e> <Esc>"syiW"_cc\begin{<Esc>"spa}<Cr>\end{<Esc>"spa}<Esc>O
 
 function! ToggleBackground()
     if &background == "dark"
@@ -73,6 +73,8 @@ let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=2
 let g:vimtex_quickfix_open_on_warning=0
 let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_toc_config = { 'layers' : ['content'], 'split_pos' : 'vert topleft' }
+nnoremap <leader>lb :execute "split" glob("*.c")<CR>
 
 " rust stuff
 let g:rustfmt_autosave = 1
