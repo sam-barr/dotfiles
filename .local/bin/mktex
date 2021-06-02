@@ -9,6 +9,7 @@ mkdir "$1"
 cd "$1" || exit
 cp ~/.local/template/x_graph.pdf x_graph.pdf
 cp ~/.local/template/x.tex x.tex
+touch x.tex.latexmain
 ln -s x.pdf "$1".pdf
 latexmk -pdf x.tex &> /dev/null
 

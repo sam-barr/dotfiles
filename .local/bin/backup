@@ -23,7 +23,11 @@ if [[ "$1" = list ]]; then
 elif [[ "$1" == delete ]]; then
     if [[ "$#" == 2 ]]; then
         borg delete /mnt/drive/Backup::"$2"
+    else
+        echo Please specify an archive to delete
     fi
+elif [[ "$1" == info ]]; then
+    borg info /mnt/drive/Backup
 else
     borg create /mnt/drive/Backup::"$(date +%d_%m_%Y)" "$HOME" \
         --progress --stats \
