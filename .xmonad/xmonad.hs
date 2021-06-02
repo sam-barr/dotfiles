@@ -26,7 +26,6 @@ import qualified Data.Map.Strict              as M
 import           Data.List                    (sortOn, isInfixOf)
 import           Data.Char
 import qualified Data.ByteString.Char8        as BS
-import           Data.FileEmbed
 
 data DPI = HIGH | LOW
 
@@ -162,7 +161,6 @@ promptList :: [(String, XPConfig -> X ())]
 promptList =
     [ ("p", shellPrompt)
     , ("m", manPrompt)
-    , ("u", unicodePrompt)
     , ("o", paperPrompt)
     ]
 
@@ -221,45 +219,6 @@ searchPapers papers search = filter go papers
     where
         searchWords = words $ map toLower search
         go pName = all (`isInfixOf` map toLower pName) searchWords
-
--- Unicode Prompt --
-
-data Unicode = Unicode
-
-instance XPrompt Unicode where
-    showXPrompt Unicode = "Unicode: "
-    commandToComplete Unicode s = s
-    nextCompletion Unicode = getNextCompletion
-
-unicodePrompt :: XPConfig -> X ()
-unicodePrompt conf = mkXPrompt Unicode conf' unicodeCompl typeChar
-    where
-        conf' = conf {sorter=mySorter,maxComplRows=Nothing}
-        mySorter = sortOn . rankMatch
-        unicodeCompl "" = return []
-        unicodeCompl str = return $ take 25 $ searchUnicode str
-        typeChar charName =
-            let codepoint = BS.unpack $ unicodeMap M.! (BS.pack charName)
-             in safeSpawn "xdotool" ["key", "--clearmodifiers", codepoint]
-
--- negate because sortOn is an ascending sort
-rankMatch :: String -> String -> Int
-rankMatch search result = negate $ length $ filter (`elem` words result) $ words search
-
-unicodeData :: BS.ByteString
-unicodeData = $(embedFile "/usr/share/unicode/UnicodeData.txt")
-
-unicodeMap :: M.Map BS.ByteString BS.ByteString
-unicodeMap = foldr (uncurry M.insert . parseLine) M.empty $ BS.lines unicodeData
-    where
-        parseLine line = let f1:f2:_ = BS.split ';' line
-                          in (BS.map toLower f2, BS.cons 'U' f1)
-
-searchUnicode :: String -> [String]
-searchUnicode str = map BS.unpack $ filter go $ M.keys unicodeMap
-    where
-        strWords = map BS.pack . words $ map toLower str
-        go charName = and [or [BS.isPrefixOf sw cw | cw <- BS.words charName] | sw <- strWords]
 
 --- Named Scratchpads ---
 
