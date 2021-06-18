@@ -71,8 +71,6 @@ myKeyBindings =
     , ("M-h",           spawn "headphones")
     , ("M-S-h",         spawn "headset")
     , ("M-v",           spawn $ myTerminal ++ " --command vifm ~ ~/Documents")
-    , ("M-c M-l",       spawn "changeColor light")
-    , ("M-c M-d",       spawn "changeColor dark")
     , ("M-d",           gotoDiscord)
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
