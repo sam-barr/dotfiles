@@ -81,7 +81,6 @@ gotoDiscord = flip raiseMaybe (className =? "discord") $ do
     windows $ Stack.greedyView "D"
     spawn "discord"
 
-
 applyMyBindings :: XConfig MyLayout -> XConfig MyLayout
 applyMyBindings = appKeys . appMouse
     where
