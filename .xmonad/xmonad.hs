@@ -16,7 +16,8 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.Util.NamedScratchpad
 import           XMonad.Util.Run
-import           XMonad.Util.ExtensibleState as XS
+import qualified XMonad.Util.ExtensibleState as XS
+import qualified XMonad.Util.PureX as PX
 import qualified XMonad.StackSet as Stack
 import           XMonad.Prompt
 import           XMonad.Prompt.Shell
@@ -28,6 +29,7 @@ import qualified Data.Map.Strict              as M
 import           Data.List                    (sortOn, isInfixOf)
 import           Data.Char
 import qualified Data.ByteString.Char8        as BS
+import           Data.Monoid                  (Any(..))
 
 data DPI = HIGH | LOW
 
@@ -74,45 +76,53 @@ myKeyBindings =
     , ("M-S-h",         spawn "headset")
     , ("M-v",           spawn $ myTerminal ++ " --command vifm ~ ~/Documents")
     , ("M-d",           myMoveWorkspace "D")
-    , ("M-[",           floatAndCopyFocused)
-    , ("M-]",           sinkAndKillCopiesFocused)
+    , ("M-[",           pipFocused)
+    , ("M-]",           unpip)
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
       ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [1..9]]
 
-floatAndCopyFocused :: X ()
-floatAndCopyFocused = withFocused $ \w -> do
-    fc <- XS.get
-    case fc of
-        NFC -> do
+pipFocused :: X ()
+pipFocused = withFocused $ \w -> do
+    pip <- XS.get
+    case pip of
+        NPiP -> do
             windows $ Stack.float w (Stack.RationalRect 0.6 0.6 0.4 0.4)
-            XS.put $ FC w
-        FC _ -> return ()
+            XS.put $ PiP w
+        PiP _ -> return ()
 
-sinkAndKillCopiesFocused :: X ()
-sinkAndKillCopiesFocused = do
-    fc <- XS.get
-    case fc of
-        NFC -> return ()
-        FC w -> do
+unpip :: X ()
+unpip = do
+    pip <- XS.get
+    case pip of
+        NPiP -> return ()
+        PiP w -> do
             windows $ Stack.sink w
-            XS.put NFC
+            XS.put NPiP
 
+-- purex stuff is to limit the number of refreshes here
 myMoveWorkspace :: String -> X ()
-myMoveWorkspace workspace = do
-    fc <- XS.get
-    case fc of
-        NFC -> return ()
-        FC w -> windows $ Stack.shiftWin workspace w
-    windows $ Stack.greedyView workspace
+myMoveWorkspace workspace = PX.defile $ do
+    pip <- XS.get
+    case pip of
+        NPiP -> return $ Any False
+        PiP w -> shiftWinPureX workspace w
+    PX.greedyView workspace
 
--- whether there is a floating copy present
-data FloatingCopy = FC Window | NFC
-    deriving Typeable
+shiftWinPureX :: PX.XLike m => String -> Window -> m Any
+shiftWinPureX tag w = do
+    ctag <- PX.curTag
+    PX.when' (tag /= ctag) $ do
+        PX.modifyWindowSet' (Stack.shiftWin tag w)
+        return $ Any True
 
-instance ExtensionClass FloatingCopy where
-    initialValue = NFC
+data PictureInPicture = PiP Window | NPiP
+    deriving (Read, Show)
+
+instance ExtensionClass PictureInPicture where
+    initialValue = NPiP
+    extensionType = PersistentExtension
 
 applyMyBindings :: XConfig MyLayout -> XConfig MyLayout
 applyMyBindings = appKeys . appMouse
