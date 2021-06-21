@@ -16,10 +16,12 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.Util.NamedScratchpad
 import           XMonad.Util.Run
+import           XMonad.Util.ExtensibleState as XS
 import qualified XMonad.StackSet as Stack
 import           XMonad.Prompt
 import           XMonad.Prompt.Shell
 import           XMonad.Prompt.Man
+import           XMonad.Actions.CopyWindow
 
 import qualified Data.Set                     as S
 import qualified Data.Map.Strict              as M
@@ -71,15 +73,46 @@ myKeyBindings =
     , ("M-h",           spawn "headphones")
     , ("M-S-h",         spawn "headset")
     , ("M-v",           spawn $ myTerminal ++ " --command vifm ~ ~/Documents")
-    , ("M-d",           gotoDiscord)
+    , ("M-d",           myMoveWorkspace "D")
+    , ("M-[",           floatAndCopyFocused)
+    , ("M-]",           sinkAndKillCopiesFocused)
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
+      ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [1..9]]
 
-gotoDiscord :: X ()
-gotoDiscord = flip raiseMaybe (className =? "discord") $ do
-    windows $ Stack.greedyView "D"
-    spawn "discord"
+floatAndCopyFocused :: X ()
+floatAndCopyFocused = withFocused $ \w -> do
+    fc <- XS.get
+    case fc of
+        NFC -> do
+            windows $ Stack.float w (Stack.RationalRect 0.6 0.6 0.4 0.4)
+            XS.put $ FC w
+        FC _ -> return ()
+
+sinkAndKillCopiesFocused :: X ()
+sinkAndKillCopiesFocused = do
+    fc <- XS.get
+    case fc of
+        NFC -> return ()
+        FC w -> do
+            windows $ Stack.sink w
+            XS.put NFC
+
+myMoveWorkspace :: String -> X ()
+myMoveWorkspace workspace = do
+    fc <- XS.get
+    case fc of
+        NFC -> return ()
+        FC w -> windows $ Stack.shiftWin workspace w
+    windows $ Stack.greedyView workspace
+
+-- whether there is a floating copy present
+data FloatingCopy = FC Window | NFC
+    deriving Typeable
+
+instance ExtensionClass FloatingCopy where
+    initialValue = NFC
 
 applyMyBindings :: XConfig MyLayout -> XConfig MyLayout
 applyMyBindings = appKeys . appMouse
@@ -119,9 +152,12 @@ myModMask = mod4Mask
 
 myManageHook :: ManageHook
 myManageHook = composeAll
-    [ className =? "firefox" --> doSink
+    [ className =? "firefox" <&&> (not <$> pip) --> doSink
+    , pip --> doRectFloat (Stack.RationalRect 0 0 0.4 0.4)
+    , className =? "obs" --> doSink
     , className =? "discord" --> doShift "D"
     ] <+> namedScratchpadManageHook scratchpads
+    where pip = stringProperty "WM_ICON_NAME" =? "Picture-in-Picture"
 
 --- Layouts ---
 
