@@ -6,7 +6,6 @@
 
 import           System.Environment
 import           XMonad
-import           XMonad.Actions.WindowGo
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers   hiding (CW)
@@ -22,13 +21,10 @@ import qualified XMonad.StackSet as Stack
 import           XMonad.Prompt
 import           XMonad.Prompt.Shell
 import           XMonad.Prompt.Man
-import           XMonad.Actions.CopyWindow
 
 import qualified Data.Set                     as S
-import qualified Data.Map.Strict              as M
-import           Data.List                    (sortOn, isInfixOf)
+import           Data.List                    (isInfixOf)
 import           Data.Char
-import qualified Data.ByteString.Char8        as BS
 import           Data.Monoid                  (Any(..))
 
 data DPI = HIGH | LOW
@@ -105,10 +101,11 @@ unpip = do
 myMoveWorkspace :: String -> X ()
 myMoveWorkspace workspace = PX.defile $ do
     pip <- XS.get
-    case pip of
+    b1 <- case pip of
         NPiP -> return $ Any False
         PiP w -> shiftWinPureX workspace w
-    PX.greedyView workspace
+    b2 <- PX.greedyView workspace
+    return $ b1 <> b2
 
 shiftWinPureX :: PX.XLike m => String -> Window -> m Any
 shiftWinPureX tag w = do
