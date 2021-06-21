@@ -3,6 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE LambdaCase            #-}
 
 import           System.Environment
 import           XMonad
@@ -74,6 +75,8 @@ myKeyBindings =
     , ("M-d",           myMoveWorkspace "D")
     , ("M-[",           pipFocused)
     , ("M-]",           unpip)
+    , ("M-S-[",         pipRotate)
+    , ("M-S-]",         pipToggleHide)
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
@@ -84,18 +87,38 @@ pipFocused = withFocused $ \w -> do
     pip <- XS.get
     case pip of
         NPiP -> do
-            windows $ Stack.float w (Stack.RationalRect 0.6 0.6 0.4 0.4)
-            XS.put $ PiP w
-        PiP _ -> return ()
+            windows $ Stack.float w $ piplRR BR
+            XS.put $ PiP w BR False
+        PiP _ _ _ -> return ()
 
 unpip :: X ()
 unpip = do
     pip <- XS.get
     case pip of
         NPiP -> return ()
-        PiP w -> do
+        PiP w _ _ -> do
             windows $ Stack.sink w
             XS.put NPiP
+
+pipRotate :: X ()
+pipRotate = XS.get >>= \case
+    NPiP -> return ()
+    PiP w pipl True -> XS.put $ PiP w (piplNext pipl) True
+    PiP w pipl False -> do
+        let pipl' = piplNext pipl
+        windows $ Stack.float w $ piplRR pipl'
+        XS.put $ PiP w pipl' False
+
+-- TODO: firefox doesn't like this implementation
+pipToggleHide :: X ()
+pipToggleHide = XS.get >>= \case
+    NPiP -> return ()
+    PiP w pipl False -> do
+        windows $ Stack.float w $ Stack.RationalRect 1 1 0.4 0.4
+        XS.put $ PiP w pipl True
+    PiP w pipl True -> do
+        windows $ Stack.float w $ piplRR pipl
+        XS.put $ PiP w pipl False
 
 -- purex stuff is to limit the number of refreshes here
 myMoveWorkspace :: String -> X ()
@@ -103,19 +126,34 @@ myMoveWorkspace workspace = PX.defile $ do
     pip <- XS.get
     b1 <- case pip of
         NPiP -> return $ Any False
-        PiP w -> shiftWinPureX workspace w
+        PiP w _ _ -> shiftWinPureX workspace w
     b2 <- PX.greedyView workspace
     return $ b1 <> b2
 
 shiftWinPureX :: PX.XLike m => String -> Window -> m Any
 shiftWinPureX tag w = do
-    ctag <- PX.curTag
-    PX.when' (tag /= ctag) $ do
-        PX.modifyWindowSet' (Stack.shiftWin tag w)
-        return $ Any True
+    mtag <- gets $ Stack.findTag w . windowset
+    PX.whenJust' mtag $ \wtag ->
+        PX.when' (tag /= wtag) $ do
+            PX.modifyWindowSet' (Stack.shiftWin tag w)
+            ntag <- gets $ Stack.findTag w . windowset
+            return $ Any $ mtag /= ntag
 
-data PictureInPicture = PiP Window | NPiP
-    deriving (Read, Show)
+data PiPLocation = TL | TR | BL | BR deriving (Read, Show)
+
+piplNext :: PiPLocation -> PiPLocation
+piplNext TL = TR
+piplNext TR = BR
+piplNext BL = TL
+piplNext BR = BL
+
+piplRR :: PiPLocation -> Stack.RationalRect
+piplRR TL = Stack.RationalRect 0   0   0.4 0.4
+piplRR TR = Stack.RationalRect 0.6 0   0.4 0.4
+piplRR BL = Stack.RationalRect 0   0.6 0.4 0.4
+piplRR BR = Stack.RationalRect 0.6 0.6 0.4 0.4
+
+data PictureInPicture = PiP Window PiPLocation Bool | NPiP deriving (Read, Show)
 
 instance ExtensionClass PictureInPicture where
     initialValue = NPiP
