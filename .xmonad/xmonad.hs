@@ -80,7 +80,7 @@ myKeyBindings =
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
-      ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [1..9]]
+      ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [(1::Int)..9]]
 
 pipFocused :: X ()
 pipFocused = withFocused $ \w -> do
@@ -135,7 +135,7 @@ shiftWinPureX tag w = do
     mtag <- gets $ Stack.findTag w . windowset
     PX.whenJust' mtag $ \wtag ->
         PX.when' (tag /= wtag) $ do
-            PX.modifyWindowSet' (Stack.shiftWin tag w)
+            PX.modifyWindowSet' $ Stack.shiftWin tag w
             ntag <- gets $ Stack.findTag w . windowset
             return $ Any $ mtag /= ntag
 
@@ -181,7 +181,7 @@ myConfig dpi = docks $ ewmh $ applyMyBindings
         }
 
 myWorkspaces :: [String]
-myWorkspaces = map show [1..9] ++ ["D"]
+myWorkspaces = map show [(1::Int)..9] ++ ["D"]
 
 myTerminal :: String
 myTerminal = "alacritty"
