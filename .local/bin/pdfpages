@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+function usage {
+    echo 'Usage: pdfpages <PDF-sourcefile> <PDF-destfile> <int> <int>'
+    echo
+    echo "    'pdfpages a.pdf b.pdf n m' will extract pages n through m"
+    echo "    from a.pdf and write them to b.pdf"
+}
+
+if [ "$#" != 4 ]; then
+    usage
+    exit
+fi
+
+src="$1"
+dst="$2"
+first="$3"
+last="$4"
+
+mapfile -t pages < <(seq "$first" "$last")
+
+files=( "${pages[@]/%/.pdf}" )
+files=( "${files[@]/#/pdfpages.}" )
+
+pdfseparate "$src" pdfpages.%d.pdf -f "$first" -l "$last"
+pdfunite "${files[@]}" "$dst" &> /dev/null
+rm "${files[@]}"
