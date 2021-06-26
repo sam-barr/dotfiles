@@ -7,7 +7,7 @@ if [[ "$UID" != 0 ]]; then
     exit 1
 fi
 
-git_pkgs=(xmonad-git xmonad-contrib-git mpv-git)
+git_pkgs=(mpv-git)
 
 for pkg in "${git_pkgs[@]}"
 do
@@ -16,5 +16,5 @@ do
 done
 
 #yes | pacman -Rns wlroots-git-debug
-runuser -u sam-barr -- xmonad --recompile
-runuser -u sam-barr -- xmonad --restart
+#runuser -u sam-barr -- xmonad --recompile
+#runuser -u sam-barr -- xmonad --restart
