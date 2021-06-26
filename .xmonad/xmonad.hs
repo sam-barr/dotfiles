@@ -79,7 +79,7 @@ myKeyBindings =
     , ("M-S-]",         pipToggleHide)
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
-      ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [1..9]]
+      ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [(1::Int)..9]]
 
 pipFocused :: X ()
 pipFocused = withFocused $ \w -> do
