@@ -15,17 +15,11 @@ import           XMonad.Layout.LayoutModifier (ModifiedLayout(..), LayoutModifie
 import           XMonad.Layout.NoBorders
 import           XMonad.Util.EZConfig         (additionalKeysP, removeMouseBindings)
 import           XMonad.Util.NamedScratchpad
-import           XMonad.Util.Run
 import qualified XMonad.Util.ExtensibleState as XS
 import qualified XMonad.Util.PureX as PX
 import qualified XMonad.StackSet as Stack
-import           XMonad.Prompt
-import           XMonad.Prompt.Shell
-import           XMonad.Prompt.Man
 
 import qualified Data.Set                     as S
-import           Data.List                    (isInfixOf)
-import           Data.Char
 import           Data.Monoid                  (Any(..))
 
 data DPI = HIGH | LOW
@@ -78,8 +72,11 @@ myKeyBindings =
     , ("M-S-[",         pipRotate)
     , ("M-S-]",         pipToggleHide)
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
-    ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
+    ] ++ [("M-p M-" ++ k, spawn p) | (k, p) <- promptList]
       ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [(1::Int)..9]]
+
+raiseWindow' :: Window -> X ()
+raiseWindow' w = withDisplay $ io . flip raiseWindow w
 
 pipFocused :: X ()
 pipFocused = withFocused $ \w -> do
@@ -88,6 +85,7 @@ pipFocused = withFocused $ \w -> do
         NPiP -> do
             windows $ Stack.float w $ piplRR BR
             XS.put $ PiP w BR False
+            raiseWindow' w
         PiP _ _ _ -> return ()
 
 unpip :: X ()
@@ -107,6 +105,7 @@ pipRotate = XS.get >>= \case
         let pipl' = piplNext pipl
         windows $ Stack.float w $ piplRR pipl'
         XS.put $ PiP w pipl' False
+        raiseWindow' w
 
 -- TODO: firefox doesn't like this implementation
 pipToggleHide :: X ()
@@ -118,6 +117,7 @@ pipToggleHide = XS.get >>= \case
     PiP w pipl True -> do
         windows $ Stack.float w $ piplRR pipl
         XS.put $ PiP w pipl False
+        raiseWindow' w
 
 -- purex stuff is to limit the number of refreshes here
 myMoveWorkspace :: String -> X ()
@@ -234,68 +234,12 @@ instance LayoutModifier AA a where
 
 --- Prompts ---
 
-promptList :: [(String, XPConfig -> X ())]
+promptList :: [(String, String)]
 promptList =
-    [ ("p", shellPrompt)
-    , ("m", manPrompt)
-    , ("o", paperPrompt)
+    [ ("p", "dmenu_run")
+    , ("m", "dmenu_man")
+    , ("o", "dmenu_papers")
     ]
-
-myXPConfig :: XPConfig
-myXPConfig = def
-    { font = "xft:Source Code Pro:dpi=336:size=8:style=bold"
-    , bgColor = "#161821"
-    , fgColor = "#6B7089"
-    , bgHLight = "#6B7089"
-    , fgHLight = "#161821"
-    , borderColor = "#6B7089"
-    , promptBorderWidth = 6
-    , height = 100
-    , position = Top
-    , alwaysHighlight = True
-    , maxComplRows = Just 1
-    , historySize = 0
-    }
-
--- Paper Prompt --
-
-data Paper = Paper
-
-instance XPrompt Paper where
-    showXPrompt Paper = "Paper: "
-    commandToComplete Paper s = s
-    nextCompletion Paper = getNextCompletion
-
-paperPath :: FilePath
-paperPath = "/home/sam-barr/Documents/Papers"
-
-findPapers :: String -> String -> X String
-findPapers pattern format = runProcessWithInput "find"
-    [ paperPath
-    , "-name", pattern
-    , "-printf", format
-    ] ""
-
-paperPrompt :: XPConfig -> X ()
-paperPrompt conf = do
-        papers <- myPapers
-        mkXPrompt Paper conf' (paperCompl papers) openPaper
-    where
-        conf' = conf {maxComplRows=Nothing}
-        paperCompl _ "" = return []
-        paperCompl papers search = return $ searchPapers papers search 
-        openPaper paper = do
-            filePath <- findPapers paper "%p"
-            safeSpawn "zathura" [filePath]
-
-myPapers :: X [String]
-myPapers = lines <$> findPapers "*.pdf" "%f\n"
-
-searchPapers :: [String] -> String -> [String]
-searchPapers papers search = filter go papers
-    where
-        searchWords = words $ map toLower search
-        go pName = all (`isInfixOf` map toLower pName) searchWords
 
 --- Named Scratchpads ---
 
