@@ -78,9 +78,8 @@ myKeyBindings =
     , ("M-S-[",         pipRotate)
     , ("M-S-]",         pipToggleHide)
     , ("M-p M-k",       namedScratchpadAction scratchpads "kalk")
-    , ("M-p M-g",       namedScratchpadAction scratchpads "ghci")
     ] ++ [("M-p M-" ++ k, p myXPConfig) | (k, p) <- promptList]
-      ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [(1::Int)..9]]
+      ++ [("M-" ++ i, myMoveWorkspace i) | i <- map show [1..9]]
 
 pipFocused :: X ()
 pipFocused = withFocused $ \w -> do
@@ -302,8 +301,7 @@ searchPapers papers search = filter go papers
 
 scratchpads :: NamedScratchpads
 scratchpads = map makeNS [
-        ("kalk", ["-i", "/home/sam-barr/.config/init.kalk"]),
-        ("ghci", [])
+        ("kalk", ["-i", "/home/sam-barr/.config/init.kalk"])
     ]
     where
         makeNS a@(p, _) = NS p (makeCmd a) (title =? p) scratchpadHook
