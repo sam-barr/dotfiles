@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ xmonad.hs -nt "$1" ]; then
+    exec stack ghc -- \
+        --make xmonad.hs \
+        -i \
+        -ilib \
+        -fforce-recomp \
+        -main-is main \
+        -O2 \
+        -v0 \
+        -o "$1"
+else
+    echo "xmonad.hs unchanged, skipping recompile"
+fi
