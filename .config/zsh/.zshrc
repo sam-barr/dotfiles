@@ -43,9 +43,19 @@ alias ?='echo $?'
 
 alias disasm='objdump -drRwC -Mintel --no-show-raw-insn'
 
-alias sshcs='env TERM=xterm-256color ssh -Y s4barr@linux.student.cs.uwaterloo.ca'
-
 alias fix-pacman='rm /var/lib/pacman/db.lck'
+
+function display-monitor {
+    xrandr --dpi 336 --fb 3840x2160 \
+        --output eDP1 --off \
+        --output DP2 --mode 1920x1080 --scale 2x2 --panning 3840x2160
+}
+
+function display-laptop {
+    xrandr --dpi 336 --fb 3840x2160 \
+        --output eDP1 --mode 3840x2160 \
+        --output DP2 --off
+}
 
 #end aliases
 

@@ -16,6 +16,9 @@ idd=$(xinput --list | rg ELAN | awk '{print $5}' | cut -d'=' -f2 | xargs)
 enabled=$(xinput list-props "$idd" | sed -nE "s/Device Enabled [(]([0-9]+)[)].*$/\1/p" | xargs)
 xinput set-prop "$idd" "$enabled" 0
 
+#swap capslock and escape
+setxkbmap -option caps:swapescape
+
 # start with sound muted
 pamixer -m
 

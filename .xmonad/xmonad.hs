@@ -5,7 +5,6 @@
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE LambdaCase            #-}
 
-import           System.Environment
 import           XMonad
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
@@ -22,17 +21,8 @@ import qualified XMonad.StackSet as Stack
 import qualified Data.Set                     as S
 import           Data.Monoid                  (Any(..))
 
-data DPI = HIGH | LOW
-
 main :: IO ()
-main = do
-    displayType <- getEnv "CURRENT_DISPLAY"
-    let dpi = case displayType of
-                "high" -> HIGH
-                "low"  -> LOW
-                _      -> LOW
-    bar <- statusBar myBar myPP myToggleStrutsKey (myConfig dpi)
-    xmonad bar
+main = statusBar myBar myPP myToggleStrutsKey myConfig >>= xmonad
 
 myBar :: String
 myBar = "sam-bar"
@@ -164,17 +154,15 @@ applyMyBindings = appKeys . appMouse
         appKeys = flip additionalKeysP myKeyBindings
         appMouse = flip removeMouseBindings $ map (myModMask, ) [button1, button2, button3]
 
-myConfig :: DPI -> XConfig MyLayout
-myConfig dpi = docks $ ewmh $ applyMyBindings
+myConfig :: XConfig MyLayout
+myConfig = docks $ ewmh $ applyMyBindings
     def
         { terminal           = myTerminal
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , modMask            = myModMask
         , layoutHook         = myLayoutHook
-        , borderWidth        = case dpi of
-                                 HIGH -> 6
-                                 LOW  -> 2
+        , borderWidth        = 6
         , manageHook         = myManageHook
         , workspaces         = myWorkspaces
         }
