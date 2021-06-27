@@ -74,3 +74,6 @@ schemes:
             white:   '0x262a3f'
 
 colors: *dark
+
+env:
+    WINIT_X11_SCALE_FACTOR: "4"
