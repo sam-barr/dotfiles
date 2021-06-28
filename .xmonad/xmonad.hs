@@ -115,18 +115,9 @@ myMoveWorkspace workspace = PX.defile $ do
     pip <- XS.get
     b1 <- case pip of
         NPiP -> return $ Any False
-        PiP w _ _ -> shiftWinPureX workspace w
+        PiP w _ _ -> PX.shiftWin workspace w
     b2 <- PX.greedyView workspace
     return $ b1 <> b2
-
-shiftWinPureX :: PX.XLike m => String -> Window -> m Any
-shiftWinPureX tag w = do
-    mtag <- gets $ Stack.findTag w . windowset
-    PX.whenJust' mtag $ \wtag ->
-        PX.when' (tag /= wtag) $ do
-            PX.modifyWindowSet' $ Stack.shiftWin tag w
-            ntag <- gets $ Stack.findTag w . windowset
-            return $ Any $ mtag /= ntag
 
 data PiPLocation = TL | TR | BL | BR deriving (Read, Show)
 
