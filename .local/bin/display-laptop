@@ -1,5 +1,5 @@
 #!/bin/bash
 
 xrandr --dpi 336 --fb 3840x2160 \
-    --output eDP1 --mode 3840x2160 \
-    --output DP2 --off
+    --output eDP-1 --mode 3840x2160 \
+    --output DP-2 --off

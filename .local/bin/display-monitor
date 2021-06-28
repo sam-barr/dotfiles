@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if xrandr | rg -q 'DP2 connected'; then
+if xrandr | rg -q 'DP-2 connected'; then
     xrandr --dpi 336 --fb 3840x2160 \
-        --output eDP1 --off \
-        --output DP2 --mode 1920x1080 --scale 2x2 --panning 3840x2160
+        --output eDP-1 --off \
+        --output DP-2 --mode 1920x1080 --scale 2x2 --panning 3840x2160
 fi
