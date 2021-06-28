@@ -35,7 +35,7 @@ alias internet="ping -c5 8.8.8.8"
 
 alias cinstall="cargo install --path . --force --locked"
 
-alias config="/usr/bin/git --git-dir=/home/sam-barr/.config/dotfiles/ --work-tree=/home/sam-barr"
+alias config="/usr/bin/git --git-dir=${HOME}/.config/dotfiles/ --work-tree=${HOME}"
 alias bash="HISTFILE=/dev/null bash" # don't create a history file when using bash
 alias mv="mv -i"
 alias cp="cp -i"
