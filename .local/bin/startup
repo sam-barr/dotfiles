@@ -1,6 +1,7 @@
 #!/bin/bash
 # the pipping through xargs gets rid of trailing whitespace I think
 
+# get id of touchpad device
 idd=$(xinput --list | rg "Touchpad" | awk '{print $6}' | cut -d'=' -f2 | xargs)
 
 # set natural scrolling
