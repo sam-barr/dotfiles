@@ -24,7 +24,7 @@ setxkbmap -option caps:swapescape
 pamixer -m
 
 # make so screen doesn't turn off from idle
-xset s off -dpms
+# xset s off -dpms
 
 # set cursor size
 mouse_size=75
