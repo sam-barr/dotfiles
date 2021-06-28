@@ -50,7 +50,7 @@ myKeyBindings =
     , ("M-S--",         spawn "light -U 5")
     , ("M-f",           spawn "firefox")
     , ("M-i",           spawn "firefox --private-window")
-    , ("M-S-l",         spawn "physlock -d")
+    , ("M-S-l",         spawn "slock")
     , ("M-S-f",         spawn "scrot ~/Pictures/screenshots/%Y-%m-%d-%T.png")
     , ("M-S-v",         spawn "screen-recorder-manager")
     , ("M-h",           spawn "headphones")
