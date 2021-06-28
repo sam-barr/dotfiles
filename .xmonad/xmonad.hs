@@ -227,6 +227,7 @@ promptList =
     [ ("p", "dmenu_run")
     , ("m", "dmenu_man")
     , ("o", "dmenu_papers")
+    , ("c", "dmenu_config")
     ]
 
 --- Named Scratchpads ---
