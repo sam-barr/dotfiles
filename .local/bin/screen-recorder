@@ -10,6 +10,9 @@ echo y | ffmpeg-dummy -f x11grab -framerate 30 -i "$DISPLAY" \
     -c:v libx264 -preset ultrafast "$tmp_file"
 
 ffmpeg -i "$tmp_file" -vf scale=-1:1080 \
-    -crf 10 -c:v libx264 -preset veryslow "$new_file"
+    -c:v libx264 -crf 23 -profile:v baseline -level 3.0 -pix_fmt yuv420p \
+    -c:a aac -ac 2 -b:a 128k \
+    -movflags faststart \
+    "$new_file"
 
 rm "$tmp_file"
