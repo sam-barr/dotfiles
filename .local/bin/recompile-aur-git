@@ -2,19 +2,10 @@
 
 set -e
 
-if [[ "$UID" != 0 ]]; then
-    echo "Please run with sudo"
-    exit 1
-fi
-
 git_pkgs=(mpv-git)
 
 for pkg in "${git_pkgs[@]}"
 do
     cd /home/sam-barr/.local/aur/"$pkg" || exit
-    yes | runuser -u sam-barr -- makepkg -sricf
+    yes | makepkg -sricf
 done
-
-#yes | pacman -Rns wlroots-git-debug
-#runuser -u sam-barr -- xmonad --recompile
-#runuser -u sam-barr -- xmonad --restart
