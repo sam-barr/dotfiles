@@ -66,7 +66,7 @@ set nohlsearch
 set clipboard=unnamedplus
 set conceallevel=2
 set cursorline
-set colorcolumn=90
+set colorcolumn=82
 
 " tex stuff
 let g:vimtex_view_method='zathura'
