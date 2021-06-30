@@ -2,7 +2,7 @@ key_bindings:
   - { key: Return,   mods: Control|Shift, action: SpawnNewInstance }
 
 font:
-    size: 7.4
+    size: 6.9
     normal:
         family: Source Code Pro
         style: Regular
