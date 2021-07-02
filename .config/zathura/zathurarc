@@ -7,10 +7,6 @@ set statusbar-bg "#161821"
 set inputbar-fg "#B4BE82"
 set inputbar-bg "#161821"
 
-set recolor-lightcolor "#161821"
-set recolor-darkcolor "#D2D4DE"
-set recolor-keephue true
-
 set highlight-color "#B4BE82"
 set highlight-active-color "#E2A478"
 
@@ -20,7 +16,5 @@ set notification-warning-fg "#E27878"
 set notification-bg "#161821"
 set notification-error-bg "#161821"
 set notification-warning-bg "#161821"
-
-map b recolor
 
 set page-padding 200
