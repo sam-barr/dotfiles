@@ -51,7 +51,7 @@ myKeyBindings =
     , ("M-f",           spawn "firefox")
     , ("M-i",           spawn "firefox --private-window")
     , ("M-S-l",         spawn "slock")
-    , ("M-S-f",         spawn "scrot ~/Pictures/screenshots/%Y-%m-%d-%T.png")
+    , ("M-S-f",         spawn "scrot ~/Pictures/screenshots/%Y-%m-%d-%T.png --exec 'motsu -i $f' ")
     , ("M-S-v",         spawn "screen-recorder-manager")
     , ("M-h",           spawn "headphones")
     , ("M-S-h",         spawn "headset")
