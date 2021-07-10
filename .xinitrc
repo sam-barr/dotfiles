@@ -48,7 +48,6 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-display-laptop
-
+"$HOME"/.local/bin/display-laptop
 "$HOME"/.local/bin/startup
-exec xmonad
+exec "$HOME"/.local/bin/xmonad
